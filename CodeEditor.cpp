@@ -23,6 +23,11 @@ inline void CodeEditor::setTabsSize(int size) noexcept
     setTabStopDistance(QFontMetrics(QFont()).horizontalAdvance(' ') * size * 2);
 }
 
+inline void CodeEditor::setNameEditingFile(const QString& name)
+{
+    nameEditingFile = name;
+}
+
 int CodeEditor::lineNumberAreaWidth()
 {
     return 100;

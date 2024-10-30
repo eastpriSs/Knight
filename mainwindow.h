@@ -29,7 +29,6 @@ private slots:
     void on_saveAsAction_triggered();
 
 private:
-    QString nameEditingFile = "untitled";
     CodeEditor *codeEditor;
     Ui::MainWindow *ui;
 };

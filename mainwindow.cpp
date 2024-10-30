@@ -28,8 +28,8 @@ void MainWindow::on_loadAction_triggered()
 {
     QString fileName = QFileDialog::getOpenFileName(this,
                     tr("Выберите файл для загрузки"), ".", tr("Source code (*.txt *.cpp *.c *.lua *.h)"));
-    nameEditingFile = fileName;
-    setWindowTitle(nameEditingFile);
+    codeEditor->setNameEditingFile(fileName);
+    setWindowTitle(fileName);
 
     QFile f(fileName);
     if (f.open(QFile::ReadOnly))
@@ -41,7 +41,7 @@ void MainWindow::on_loadAction_triggered()
 
 void MainWindow::on_saveAction_triggered()
 {
-    QFile f(nameEditingFile);
+    QFile f(fileName);
     if (!f.exists()){
         on_saveAsAction_triggered();
     }
@@ -63,7 +63,7 @@ void MainWindow::on_saveAsAction_triggered()
     }
     QTextStream writeStream(&f);
     writeStream << codeEditor->toPlainText();
-    nameEditingFile = fileName;
+    codeEditor->setNameEditingFile(fileName);
     setWindowTitle(nameEditingFile);
 }
 
