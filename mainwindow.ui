@@ -39,8 +39,9 @@
    </widget>
    <widget class="QMenu" name="menu_F5">
     <property name="title">
-     <string>Отправить(F5)</string>
+     <string>??</string>
     </property>
+    <addaction name="sendAction"/>
    </widget>
    <addaction name="fileMenu"/>
    <addaction name="menu_F5"/>
@@ -65,6 +66,16 @@
   <action name="sendSettingAction">
    <property name="text">
     <string>Отправка</string>
+   </property>
+  </action>
+  <action name="sendAction">
+   <property name="text">
+    <string>Вызвать компилятор(F5)</string>
+   </property>
+   <property name="font">
+    <font>
+     <family>Verdana</family>
+    </font>
    </property>
   </action>
  </widget>

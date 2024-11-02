@@ -14,9 +14,9 @@ class CodeEditor : public QPlainTextEdit
     Q_OBJECT
 
 public:
+    QString nameEditingFile = "untitled";
     CodeEditor(QWidget *parent = nullptr);
 
-    inline void setNameEditingFile(const QString&);
     void lineNumberAreaPaintEvent(QPaintEvent *event);
     int lineNumberAreaWidth();
 
@@ -35,7 +35,6 @@ private slots:
     inline void setTabsSize(int size) noexcept;
 
 private:
-    QString nameEditingFile = "untitled";
     int tabsSize = 4;
     CodeEditorStates::codeEditorMode mode = CodeEditorStates::codeEditorMode::fullEditMode;
     QWidget *lineNumberArea;

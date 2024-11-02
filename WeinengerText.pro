@@ -10,16 +10,22 @@ CONFIG += c++17
 
 SOURCES += \
     CodeEditor.cpp \
+    ConsoleOutput.cpp \
     main.cpp \
-    mainwindow.cpp
+    mainwindow.cpp \
+    settingmenusendaction.cpp
 
 HEADERS += \
     CodeEditor.h \
+    ConsoleOutput.h \
     SyntaxHighlighter.h \
-    mainwindow.h
+    mainwindow.h \
+    settingmenusendaction.h
 
 FORMS += \
-    mainwindow.ui
+    consoleoutput.ui \
+    mainwindow.ui \
+    settingmenusendaction.ui
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin

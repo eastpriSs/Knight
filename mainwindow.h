@@ -4,8 +4,10 @@
 #include <QMainWindow>
 #include <QWidget>
 #include <QPlainTextEdit>
+#include <QProcess>
 
 #include "CodeEditor.h"
+#include "ConsoleOutput.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui {
@@ -23,12 +25,15 @@ public:
 
 private slots:
     void on_loadAction_triggered();
-
     void on_saveAction_triggered();
-
     void on_saveAsAction_triggered();
 
+    void on_sendSettingAction_triggered();
+
+    void on_sendAction_triggered();
+
 private:
+    ConsoleOutput* consoleOutput;
     CodeEditor *codeEditor;
     Ui::MainWindow *ui;
 };
