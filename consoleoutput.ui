@@ -16,10 +16,10 @@
   <widget class="QWidget" name="verticalLayoutWidget">
    <property name="geometry">
     <rect>
-     <x>79</x>
+     <x>19</x>
      <y>69</y>
-     <width>321</width>
-     <height>194</height>
+     <width>421</width>
+     <height>451</height>
     </rect>
    </property>
    <layout class="QVBoxLayout" name="verticalLayout">
@@ -42,6 +42,16 @@
     </item>
     <item>
      <widget class="QTextBrowser" name="errorOutput"/>
+    </item>
+    <item>
+     <widget class="QLabel" name="label_3">
+      <property name="text">
+       <string>programOut</string>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <widget class="QTextBrowser" name="programOutput"/>
     </item>
    </layout>
   </widget>

@@ -4,6 +4,8 @@
 #include <QPlainTextEdit>
 #include <QObject>
 
+#include "SyntaxHighlighter.h"
+
 namespace CodeEditorStates
 {
 enum codeEditorMode {commandMode, fullEditMode};
@@ -38,6 +40,7 @@ private:
     int tabsSize = 4;
     CodeEditorStates::codeEditorMode mode = CodeEditorStates::codeEditorMode::fullEditMode;
     QWidget *lineNumberArea;
+    SyntaxHiglighter* highlighter;
 };
 
 class LineNumberArea : public QWidget

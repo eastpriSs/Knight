@@ -9,6 +9,8 @@ class SyntaxHiglighter : public QSyntaxHighlighter
     Q_OBJECT
 public:
     SyntaxHiglighter(QTextDocument *parent = 0);
+protected:
+    void highlightBlock(const QString&) override;
 private:
     QStringList keywords;
 };

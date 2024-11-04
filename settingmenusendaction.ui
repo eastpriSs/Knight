@@ -44,8 +44,8 @@
     <rect>
      <x>20</x>
      <y>10</y>
-     <width>211</width>
-     <height>46</height>
+     <width>191</width>
+     <height>196</height>
     </rect>
    </property>
    <layout class="QVBoxLayout" name="verticalLayout">
@@ -58,6 +58,36 @@
     </item>
     <item>
      <widget class="QLineEdit" name="compilerName"/>
+    </item>
+    <item>
+     <widget class="QLabel" name="label_2">
+      <property name="text">
+       <string>Флаги</string>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <widget class="QLineEdit" name="flags"/>
+    </item>
+    <item>
+     <widget class="QLabel" name="label_3">
+      <property name="text">
+       <string>Имя выходного файла</string>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <widget class="QLineEdit" name="outputExe"/>
+    </item>
+    <item>
+     <widget class="QLabel" name="label_4">
+      <property name="text">
+       <string>Составленная комманда</string>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <widget class="QLineEdit" name="outputCommand"/>
     </item>
    </layout>
   </widget>

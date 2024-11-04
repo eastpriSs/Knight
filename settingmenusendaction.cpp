@@ -23,3 +23,9 @@ void SettingMenuSendAction::on_confirm_clicked()
     compilerSettingFile.close();
 }
 
+
+void SettingMenuSendAction::on_cancel_clicked()
+{
+    this->close();
+}
+

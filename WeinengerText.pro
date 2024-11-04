@@ -11,6 +11,7 @@ CONFIG += c++17
 SOURCES += \
     CodeEditor.cpp \
     ConsoleOutput.cpp \
+    SyntaxHighlighter.cpp \
     main.cpp \
     mainwindow.cpp \
     settingmenusendaction.cpp

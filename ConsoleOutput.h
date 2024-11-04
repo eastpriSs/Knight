@@ -13,7 +13,8 @@ class ConsoleOutput : public QWidget
 
 public:
     explicit ConsoleOutput(QWidget *parent = nullptr);
-    ConsoleOutput(QString, QString, QWidget *parent = nullptr);
+    ConsoleOutput(const QString&, const QString&, QWidget *parent = nullptr);
+    ConsoleOutput(const QString&, const QString&, const QString&, QWidget *parent = nullptr);
     ~ConsoleOutput();
 
 private:

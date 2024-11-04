@@ -14,6 +14,7 @@ CodeEditor::CodeEditor(QWidget *parent) : QPlainTextEdit(parent)
     updateLineNumberAreaWidth(0);
     highlightCurrentLine();
     setTabsSize(tabsSize);
+    highlighter = new SyntaxHiglighter(document());
 }
 
 inline void CodeEditor::setTabsSize(int size) noexcept

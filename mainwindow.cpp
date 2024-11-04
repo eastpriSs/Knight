@@ -80,22 +80,42 @@ void MainWindow::on_sendSettingAction_triggered()
 }
 
 
-void MainWindow::on_sendAction_triggered()
+void startCmdProc(QProcess& cmdProc, const QString& command)
 {
-    QFile compilerSettingFile("compiler.cfg");
-    compilerSettingFile.open(QIODevice::ReadOnly);
-    QString compilerName = compilerSettingFile.readLine();
-    QProcess cmdProc;
-    QString command = compilerName + ' ' + codeEditor->nameEditingFile;
     cmdProc.setArguments(QStringList() << "/c" << command);
     cmdProc.setProgram("cmd.exe");
     cmdProc.start();
     cmdProc.waitForFinished();
-    qDebug() << "Sending command: " << command << Qt::endl;
+}
+
+QString readLineFormFile(const QString& fn)
+{
+    QFile compilerSettingFile(fn);
+    compilerSettingFile.open(QIODevice::ReadOnly);
+    QTextStream in(&compilerSettingFile);
+    return in.readLine();
+}
+
+void MainWindow::on_sendAction_triggered()
+{
+    QString compilerName = readLineFormFile("compiler.cfg");
+    QString command = compilerName + ' ' + codeEditor->nameEditingFile;
+    QProcess cmdProc;
+
+    ui->statusbar->showMessage("Sending command: " + command);
+    startCmdProc(cmdProc, command);
+
+    QByteArray standardOut = cmdProc.readAllStandardOutput();
+    QByteArray errorOut = cmdProc.readAllStandardError();
+
+    command = "a"; // Сформированный exe-файл, нужно в настройки добавить поле
+    startCmdProc(cmdProc, command);
+    QByteArray programOut = cmdProc.readAllStandardOutput(); // Возможно, объеденить с readAllStandardError
+
     if (consoleOutput != nullptr)
         delete consoleOutput;
-    consoleOutput = new ConsoleOutput(cmdProc.readAllStandardOutput(),
-                                     cmdProc.readAllStandardError());
+
+    consoleOutput = new ConsoleOutput(standardOut, errorOut, programOut);
     consoleOutput->show();
 }
 
