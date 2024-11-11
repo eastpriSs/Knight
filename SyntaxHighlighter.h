@@ -3,16 +3,25 @@
 
 #include <QObject>
 #include <QSyntaxHighlighter>
+#include "Analyzer.h"
 
-class SyntaxHiglighter : public QSyntaxHighlighter
+class SyntaxHiglighter final : public QSyntaxHighlighter
 {
     Q_OBJECT
 public:
     SyntaxHiglighter(QTextDocument *parent = 0);
-protected:
-    void highlightBlock(const QString&) override;
+    void switchAnalyzer(Analyzer*);
+
 private:
-    QStringList keywords;
+    void highlightBlock(const QString&) override;
+
+private:
+    QTextCharFormat keywordHighlightingRule;
+    QTextCharFormat idHighlightingRule;
+    QTextCharFormat numHighlightingRule;
+    QTextCharFormat macroHighlightingRule;
+    QTextCharFormat stringLiterHighlightingRule;
+    Analyzer *analyzer;
 };
 
 #endif // SYNTAXHIGHLIGHTER_H

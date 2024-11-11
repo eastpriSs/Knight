@@ -13,7 +13,9 @@ protected:
 
 public:
     Analyzer();
+    void setScanningBlock(const QString&);
     virtual Token getAnalysedToken();
+    virtual ~Analyzer() = default;
 };
 
 #endif // ANALYZER_H

@@ -3,6 +3,9 @@
 #include <QTextBlock>
 #include <QFontMetrics>
 
+#include "LanguageList.h"
+#include "AnalyzerC.h"
+
 CodeEditor::CodeEditor(QWidget *parent) : QPlainTextEdit(parent)
 {
     lineNumberArea = new LineNumberArea(this);
@@ -49,28 +52,77 @@ void CodeEditor::changeModeToCommandInput()
 {
     mode = CodeEditorStates::codeEditorMode::commandMode;
     setFixedHeight(height() - 100);
+    setReadOnly(true);
 }
 
 void CodeEditor::changeModeToFullEdit()
 {
     mode = CodeEditorStates::codeEditorMode::fullEditMode;
     setFixedHeight(height() + 100);
+    setReadOnly(false);
+}
+
+void CodeEditor::languageChanged(QListWidget* list)
+{
+    if (list->currentItem()->text() == "C") // todo: remove magic const
+        highlighter->switchAnalyzer(new AnalyzerC());
+    else
+        highlighter->switchAnalyzer(new Analyzer());
+
+    highlighter->setDocument(document());
+}
+
+void CodeEditor::openSwitchingLanguageMenu()
+{
+    LanguageList *languageList = new LanguageList();
+    languageList->addItems({"C", "Java", "Non"}); // todo: remove magic const
+    languageList->setWindowModality(Qt::WindowModal);
+    languageList->setFocus();
+    connect(languageList, &QListWidget::itemSelectionChanged, this,
+            [this, languageList]()
+            {
+                this->languageChanged(languageList);
+            }
+    );
+    languageList->show();
+    QEventLoop loop;
+    connect(this, SIGNAL(destroyed()), & loop, SLOT(quit()));
+    loop.exec();
+    delete languageList;
+}
+
+void CodeEditor::keyPressEventInCommandMode(QKeyEvent *event)
+{
+    switch(event->key())
+    {
+    case Qt::Key_Escape:
+        changeModeToFullEdit();
+        break;
+    case Qt::Key_L:
+        openSwitchingLanguageMenu();
+    }
+}
+
+void CodeEditor::keyPressEventInEditMode(QKeyEvent *event)
+{
+    switch(event->key())
+    {
+    case Qt::Key_Escape:
+        changeModeToCommandInput();
+        break;
+    default:
+        QPlainTextEdit::keyPressEvent(event);
+    }
 }
 
 void CodeEditor::keyPressEvent(QKeyEvent *event)
 {
     using namespace CodeEditorStates;
 
-    if (event->key() == Qt::Key_Escape) {
-        if (mode == codeEditorMode::fullEditMode)
-            changeModeToCommandInput();
-        else
-            changeModeToFullEdit();
-    }
-    else
-    {
-        QPlainTextEdit::keyPressEvent(event);
-    }
+    if (mode == codeEditorMode::commandMode)
+        keyPressEventInCommandMode(event);
+    else if (mode == codeEditorMode::fullEditMode)
+        keyPressEventInEditMode(event);
 }
 
 void CodeEditor::resizeEvent(QResizeEvent *e)
@@ -88,7 +140,7 @@ void CodeEditor::highlightCurrentLine()
     if (!isReadOnly()) {
         QTextEdit::ExtraSelection selection;
 
-        QColor lineColor = QColor(Qt::yellow).lighter(160);
+        QColor lineColor = QColor(Qt::lightGray).lighter(120);
 
         selection.format.setBackground(lineColor);
         selection.format.setProperty(QTextFormat::FullWidthSelection, true);

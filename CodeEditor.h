@@ -3,8 +3,10 @@
 
 #include <QPlainTextEdit>
 #include <QObject>
+#include <QListWidget>
 
 #include "SyntaxHighlighter.h"
+
 
 namespace CodeEditorStates
 {
@@ -28,12 +30,16 @@ protected:
 private :
     void changeModeToFullEdit();
     void changeModeToCommandInput();
+    void keyPressEventInCommandMode(QKeyEvent *event);
+    void keyPressEventInEditMode(QKeyEvent *event);
+    void openSwitchingLanguageMenu();
 
 private slots:
     void keyPressEvent(QKeyEvent *event) override;
     void updateLineNumberAreaWidth(int newBlockCount);
     void highlightCurrentLine();
     void updateLineNumberArea(const QRect &rect, int dy);
+    void languageChanged(QListWidget*);
     inline void setTabsSize(int size) noexcept;
 
 private:

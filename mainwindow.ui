@@ -39,7 +39,7 @@
    </widget>
    <widget class="QMenu" name="menu_F5">
     <property name="title">
-     <string>??</string>
+     <string>Код</string>
     </property>
     <addaction name="sendAction"/>
    </widget>

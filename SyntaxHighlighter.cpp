@@ -1,38 +1,62 @@
 #include "SyntaxHighlighter.h"
+#include "Token.h"
 
 SyntaxHiglighter::SyntaxHiglighter(QTextDocument *parent)
     : QSyntaxHighlighter(parent)
 {
-    keywords.append("int");
+    analyzer = new Analyzer();
+
+    // Keyword
+    keywordHighlightingRule.setFontWeight(QFont::ExtraBold);
+
+    // Id
+    idHighlightingRule.setFontItalic(true);
+    idHighlightingRule.setFontWeight(QFont::Bold);
+    idHighlightingRule.setForeground(Qt::darkBlue);
+
+    // Number
+    numHighlightingRule.setFontWordSpacing(10.0);
+    // Macro
+    macroHighlightingRule.setForeground(Qt::darkCyan);
+    // String
+    stringLiterHighlightingRule.setForeground(Qt::darkGreen);
 }
 
-
-QString makeString(const QString::const_iterator& b,
-                   const QString::const_iterator& e)
+void SyntaxHiglighter::switchAnalyzer(Analyzer* a)
 {
-    QString res;
-    for(auto i = b; i != e; ++i)
-        res.append(*i);
-    return res;
+    if (analyzer != nullptr)
+        delete analyzer;
+    analyzer = a;
 }
 
 void SyntaxHiglighter::highlightBlock(const QString& text)
 {
-    /*
-
-        Пробная версия. Нужно добавить класс Анализатор.
-    */
-    auto first = text.begin();
-    auto forward = first + 1;
-    if (first->isLetter())
+    Token token;
+    analyzer->setScanningBlock(text);
+    while((token = analyzer->getAnalysedToken()), token.stype != ShortType::eof)
     {
-        while(forward->isLetter() || forward->isDigit())
-            ++forward;
+        switch (token.stype)
+        {
+        case ShortType::id:
+            setFormat(token.posStartOfWord, token.posEndOfWord, idHighlightingRule);
+            break;
+        case ShortType::num:
+            setFormat(token.posStartOfWord, token.posEndOfWord, numHighlightingRule);
+            break;
+        case ShortType::keyword:
+            setFormat(token.posStartOfWord, token.posEndOfWord, keywordHighlightingRule);
+            break;
+        case ShortType::macro:
+            setFormat(token.posStartOfWord, token.posEndOfWord, macroHighlightingRule);
+            break;
+        case ShortType::stringLiter:
+            setFormat(token.posStartOfWord, token.posEndOfWord, stringLiterHighlightingRule);
+            break;
+        case ShortType::unknown:
+            setFormat(token.posStartOfWord, token.posEndOfWord, QTextCharFormat());
+            break;
 
-        qDebug() << makeString(first, forward);
-        if (keywords.contains(makeString(first, forward)))
-            setFormat(first - text.begin(), forward - text.begin(), QFont("Arial", 20));
-        else
-            setFormat(first - text.begin(), forward - text.begin(), QFont("Arial", 30));
+        default : break;
+        }
     }
 }

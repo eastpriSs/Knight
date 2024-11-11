@@ -107,15 +107,15 @@ void MainWindow::on_sendAction_triggered()
 
     QByteArray standardOut = cmdProc.readAllStandardOutput();
     QByteArray errorOut = cmdProc.readAllStandardError();
+    QString    result = "";
 
-    command = "a"; // Сформированный exe-файл, нужно в настройки добавить поле
-    startCmdProc(cmdProc, command);
-    QByteArray programOut = cmdProc.readAllStandardOutput(); // Возможно, объеденить с readAllStandardError
+    if (errorOut.isEmpty())
+        result = "Compile is succesful";
 
     if (consoleOutput != nullptr)
         delete consoleOutput;
 
-    consoleOutput = new ConsoleOutput(standardOut, errorOut, programOut);
+    consoleOutput = new ConsoleOutput(standardOut, errorOut, result);
     consoleOutput->show();
 }
 

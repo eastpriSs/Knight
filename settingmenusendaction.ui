@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>462</width>
-    <height>312</height>
+    <width>558</width>
+    <height>365</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -16,20 +16,13 @@
   <widget class="QWidget" name="horizontalLayoutWidget">
    <property name="geometry">
     <rect>
-     <x>290</x>
-     <y>270</y>
+     <x>390</x>
+     <y>330</y>
      <width>160</width>
      <height>31</height>
     </rect>
    </property>
    <layout class="QHBoxLayout" name="horizontalLayout">
-    <item>
-     <widget class="QPushButton" name="confirm">
-      <property name="text">
-       <string>Применить</string>
-      </property>
-     </widget>
-    </item>
     <item>
      <widget class="QPushButton" name="cancel">
       <property name="text">
@@ -37,57 +30,174 @@
       </property>
      </widget>
     </item>
+    <item>
+     <widget class="QPushButton" name="confirm">
+      <property name="text">
+       <string>Применить</string>
+      </property>
+     </widget>
+    </item>
    </layout>
   </widget>
-  <widget class="QWidget" name="verticalLayoutWidget">
+  <widget class="QWidget" name="layoutWidget">
    <property name="geometry">
     <rect>
-     <x>20</x>
+     <x>40</x>
      <y>10</y>
-     <width>191</width>
-     <height>196</height>
+     <width>471</width>
+     <height>283</height>
     </rect>
    </property>
-   <layout class="QVBoxLayout" name="verticalLayout">
+   <layout class="QVBoxLayout" name="verticalLayout_2">
     <item>
-     <widget class="QLabel" name="label">
-      <property name="text">
-       <string>Компилятор</string>
-      </property>
-     </widget>
-    </item>
-    <item>
-     <widget class="QLineEdit" name="compilerName"/>
-    </item>
-    <item>
-     <widget class="QLabel" name="label_2">
-      <property name="text">
-       <string>Флаги</string>
-      </property>
-     </widget>
-    </item>
-    <item>
-     <widget class="QLineEdit" name="flags"/>
-    </item>
-    <item>
-     <widget class="QLabel" name="label_3">
-      <property name="text">
-       <string>Имя выходного файла</string>
-      </property>
-     </widget>
-    </item>
-    <item>
-     <widget class="QLineEdit" name="outputExe"/>
+     <layout class="QHBoxLayout" name="horizontalLayout_2">
+      <item>
+       <widget class="QLabel" name="label">
+        <property name="text">
+         <string>Компилятор</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLineEdit" name="compilerName"/>
+      </item>
+      <item>
+       <widget class="QTreeWidget" name="treeWidget">
+        <property name="enabled">
+         <bool>true</bool>
+        </property>
+        <attribute name="headerVisible">
+         <bool>true</bool>
+        </attribute>
+        <column>
+         <property name="text">
+          <string>Языки</string>
+         </property>
+         <property name="font">
+          <font>
+           <family>Wide Latin</family>
+           <pointsize>12</pointsize>
+          </font>
+         </property>
+        </column>
+        <item>
+         <property name="text">
+          <string>C++</string>
+         </property>
+         <property name="font">
+          <font>
+           <family>Snap ITC</family>
+           <pointsize>12</pointsize>
+          </font>
+         </property>
+         <item>
+          <property name="text">
+           <string>g++</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>clang++</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>gcc</string>
+          </property>
+         </item>
+        </item>
+        <item>
+         <property name="text">
+          <string>Java</string>
+         </property>
+         <property name="font">
+          <font>
+           <family>Ravie</family>
+           <pointsize>12</pointsize>
+          </font>
+         </property>
+         <item>
+          <property name="text">
+           <string>javac</string>
+          </property>
+         </item>
+        </item>
+       </widget>
+      </item>
+     </layout>
     </item>
     <item>
      <widget class="QLabel" name="label_4">
+      <property name="font">
+       <font>
+        <family>Microsoft New Tai Lue</family>
+       </font>
+      </property>
       <property name="text">
-       <string>Составленная комманда</string>
+       <string>Убедитесь в том, что выбранный вами компилятор можно вызвать из терминала.</string>
       </property>
      </widget>
     </item>
     <item>
-     <widget class="QLineEdit" name="outputCommand"/>
+     <widget class="Line" name="line">
+      <property name="orientation">
+       <enum>Qt::Orientation::Horizontal</enum>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <spacer name="verticalSpacer">
+      <property name="orientation">
+       <enum>Qt::Orientation::Vertical</enum>
+      </property>
+      <property name="sizeHint" stdset="0">
+       <size>
+        <width>20</width>
+        <height>40</height>
+       </size>
+      </property>
+     </spacer>
+    </item>
+    <item>
+     <layout class="QHBoxLayout" name="horizontalLayout_3">
+      <item>
+       <widget class="QLabel" name="label_2">
+        <property name="text">
+         <string>Флаги</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLineEdit" name="flags"/>
+      </item>
+     </layout>
+    </item>
+    <item>
+     <spacer name="verticalSpacer_2">
+      <property name="orientation">
+       <enum>Qt::Orientation::Vertical</enum>
+      </property>
+      <property name="sizeHint" stdset="0">
+       <size>
+        <width>20</width>
+        <height>40</height>
+       </size>
+      </property>
+     </spacer>
+    </item>
+    <item>
+     <layout class="QHBoxLayout" name="horizontalLayout_4">
+      <item>
+       <widget class="QLabel" name="label_3">
+        <property name="text">
+         <string>Имя выходного файла</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLineEdit" name="outputExe"/>
+      </item>
+     </layout>
     </item>
    </layout>
   </widget>

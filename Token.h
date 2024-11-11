@@ -4,7 +4,7 @@
 
 enum class ShortType
 {
-    unknown, keyword, num, id, opeartor, eof
+    unknown, keyword, num, id, _operator, macro, stringLiter, eof
 };
 
 class Token

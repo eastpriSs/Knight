@@ -10,9 +10,12 @@ CONFIG += c++17
 
 SOURCES += \
     Analyzer.cpp \
+    AnalyzerC.cpp \
     CodeEditor.cpp \
     ConsoleOutput.cpp \
+    LanguageList.cpp \
     Lexer.cpp \
+    LexerC.cpp \
     Parser.cpp \
     SyntaxHighlighter.cpp \
     Token.cpp \
@@ -22,9 +25,12 @@ SOURCES += \
 
 HEADERS += \
     Analyzer.h \
+    AnalyzerC.h \
     CodeEditor.h \
     ConsoleOutput.h \
+    LanguageList.h \
     Lexer.h \
+    LexerC.h \
     Parser.h \
     SyntaxHighlighter.h \
     Token.h \
