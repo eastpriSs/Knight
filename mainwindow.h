@@ -32,6 +32,12 @@ private slots:
 
     void on_sendAction_triggered();
 
+    void on_turnOnDarkTheme_triggered();
+
+    void on_turnOnCustomTheme_triggered();
+
+    void on_turnOnBrightTheme_triggered();
+
 private:
     ConsoleOutput* consoleOutput;
     CodeEditor *codeEditor;

@@ -119,3 +119,26 @@ void MainWindow::on_sendAction_triggered()
     consoleOutput->show();
 }
 
+void MainWindow::on_turnOnDarkTheme_triggered()
+{
+    setStyleSheet("background-color: #2e2f30;");
+    ui->menubar->setStyleSheet("QMenuBar { color: white; }"
+                               "QMenu::item { color: white; }");
+    codeEditor->changeToDarkTheme();
+}
+
+
+void MainWindow::on_turnOnCustomTheme_triggered()
+{
+
+}
+
+
+void MainWindow::on_turnOnBrightTheme_triggered()
+{
+    setStyleSheet("background-color: white;");
+    ui->menubar->setStyleSheet("QMenuBar { color: black; } "
+                               "QMenu::item { color: black; }");
+    codeEditor->changeToBrightTheme();
+}
+

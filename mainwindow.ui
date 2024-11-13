@@ -13,6 +13,9 @@
   <property name="windowTitle">
    <string>MainWindow</string>
   </property>
+  <property name="autoFillBackground">
+   <bool>false</bool>
+  </property>
   <widget class="QWidget" name="centralwidget"/>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">
@@ -20,7 +23,7 @@
      <x>0</x>
      <y>0</y>
      <width>854</width>
-     <height>22</height>
+     <height>21</height>
     </rect>
    </property>
    <widget class="QMenu" name="fileMenu">
@@ -35,7 +38,16 @@
     <property name="title">
      <string>Настройка</string>
     </property>
+    <widget class="QMenu" name="menu_2">
+     <property name="title">
+      <string>Изменить тему</string>
+     </property>
+     <addaction name="turnOnBrightTheme"/>
+     <addaction name="turnOnDarkTheme"/>
+     <addaction name="turnOnCustomTheme"/>
+    </widget>
     <addaction name="sendSettingAction"/>
+    <addaction name="menu_2"/>
    </widget>
    <widget class="QMenu" name="menu_F5">
     <property name="title">
@@ -76,6 +88,21 @@
     <font>
      <family>Verdana</family>
     </font>
+   </property>
+  </action>
+  <action name="turnOnBrightTheme">
+   <property name="text">
+    <string>Светлая</string>
+   </property>
+  </action>
+  <action name="turnOnDarkTheme">
+   <property name="text">
+    <string>Тёмная</string>
+   </property>
+  </action>
+  <action name="turnOnCustomTheme">
+   <property name="text">
+    <string>Другая</string>
    </property>
   </action>
  </widget>

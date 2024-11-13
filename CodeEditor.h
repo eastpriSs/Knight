@@ -23,6 +23,9 @@ public:
 
     void lineNumberAreaPaintEvent(QPaintEvent *event);
     int lineNumberAreaWidth();
+    void changeToDarkTheme();
+    void changeToBrightTheme();
+    void changeToCustomTheme();
 
 protected:
     void resizeEvent(QResizeEvent *event) override;
@@ -47,6 +50,7 @@ private:
     CodeEditorStates::codeEditorMode mode = CodeEditorStates::codeEditorMode::fullEditMode;
     QWidget *lineNumberArea;
     SyntaxHiglighter* highlighter;
+    QColor currentLineColor;
 };
 
 class LineNumberArea : public QWidget

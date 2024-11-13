@@ -15,6 +15,7 @@ CodeEditor::CodeEditor(QWidget *parent) : QPlainTextEdit(parent)
     connect(this, &CodeEditor::cursorPositionChanged, this, &CodeEditor::highlightCurrentLine);
 
     updateLineNumberAreaWidth(0);
+    currentLineColor = Qt::lightGray;
     highlightCurrentLine();
     setTabsSize(tabsSize);
     highlighter = new SyntaxHiglighter(document());
@@ -140,9 +141,7 @@ void CodeEditor::highlightCurrentLine()
     if (!isReadOnly()) {
         QTextEdit::ExtraSelection selection;
 
-        QColor lineColor = QColor(Qt::lightGray).lighter(120);
-
-        selection.format.setBackground(lineColor);
+        selection.format.setBackground(currentLineColor);
         selection.format.setProperty(QTextFormat::FullWidthSelection, true);
         selection.cursor = textCursor();
         selection.cursor.clearSelection();
@@ -173,4 +172,23 @@ void CodeEditor::lineNumberAreaPaintEvent(QPaintEvent *event)
         bottom = top + qRound(blockBoundingRect(block).height());
         ++blockNumber;
     }
+}
+
+void CodeEditor::changeToDarkTheme()
+{
+    setStyleSheet("color: white;");
+    currentLineColor = QColor::fromRgb(46, 47, 48);
+    highlightCurrentLine();
+}
+
+void CodeEditor::changeToBrightTheme()
+{
+    setStyleSheet("color: black;");
+    currentLineColor = Qt::lightGray;
+    highlightCurrentLine();
+}
+
+void CodeEditor::changeToCustomTheme()
+{
+
 }
