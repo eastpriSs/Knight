@@ -61,12 +61,15 @@ Token LexerC::scanMacro()
 Token LexerC::scanString()
 {
     Token res;
-    while(*forward != '"') ++forward; // todo: add special symbols
+    while(*forward != '"' && *forward != '\0')
+        ++forward; // todo: add special symbols
+
+    ++forward;
     res.stype = ShortType::stringLiter;
     return res;
 }
 
-Token LexerC::scan() // BIG TODO: падает, скорее всего, выходит за границы
+Token LexerC::scan()
 {
     Token scanningToken;
     skipWhiteSpaces();
@@ -87,7 +90,7 @@ Token LexerC::scan() // BIG TODO: падает, скорее всего, вых�
     scanningToken.posStartOfWord = it - begin;
     scanningToken.posEndOfWord   = forward - begin;
 
-    qDebug() << "Lexer::scan() messeage:";
+    qDebug() << "LexerC::scan() messeage:";
     qDebug() << makeString(it, forward) << ", type=" << static_cast<int>(scanningToken.stype);
 
     it = forward;

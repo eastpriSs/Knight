@@ -7,6 +7,7 @@
 class LexerC final : public Lexer
 {
 private:
+
     void skipWhiteSpaces();
     [[nodiscard]]
     Token scanNumber();
