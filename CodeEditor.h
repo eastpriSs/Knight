@@ -6,7 +6,7 @@
 #include <QListWidget>
 
 #include "SyntaxHighlighter.h"
-
+#include "LanguageList.h"
 
 namespace CodeEditorStates
 {
@@ -47,10 +47,13 @@ private slots:
 
 private:
     int tabsSize = 4;
+    SyntaxHiglighter highlighter = SyntaxHiglighter(document());;
     CodeEditorStates::codeEditorMode mode = CodeEditorStates::codeEditorMode::fullEditMode;
-    QWidget *lineNumberArea;
-    SyntaxHiglighter* highlighter;
     QColor currentLineColor;
+    QColor currentLineSymbolColor;
+
+    QWidget *lineNumberArea;
+    LanguageList *langList;
 };
 
 class LineNumberArea : public QWidget

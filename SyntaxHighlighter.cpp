@@ -22,6 +22,13 @@ SyntaxHiglighter::SyntaxHiglighter(QTextDocument *parent)
     stringLiterHighlightingRule.setForeground(Qt::darkGreen);
 }
 
+void SyntaxHiglighter::turnOnDarkTheme()
+{
+    keywordHighlightingRule.setForeground(QColor::fromRgb(210,67,115));
+    idHighlightingRule.setForeground(QColor::fromRgb(166,117,234));
+    macroHighlightingRule.setForeground(Qt::lightGray);
+}
+
 void SyntaxHiglighter::switchAnalyzer(Analyzer* a)
 {
     if (analyzer != nullptr)

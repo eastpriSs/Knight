@@ -2,6 +2,7 @@
 #include <QPainter>
 #include <QTextBlock>
 #include <QFontMetrics>
+#include <memory>
 
 #include "LanguageList.h"
 #include "AnalyzerC.h"
@@ -9,16 +10,17 @@
 CodeEditor::CodeEditor(QWidget *parent) : QPlainTextEdit(parent)
 {
     lineNumberArea = new LineNumberArea(this);
+    langList = nullptr;
 
     connect(this, &CodeEditor::blockCountChanged, this, &CodeEditor::updateLineNumberAreaWidth);
     connect(this, &CodeEditor::updateRequest, this, &CodeEditor::updateLineNumberArea);
     connect(this, &CodeEditor::cursorPositionChanged, this, &CodeEditor::highlightCurrentLine);
 
     updateLineNumberAreaWidth(0);
+    currentLineSymbolColor = Qt::black;
     currentLineColor = Qt::lightGray;
     highlightCurrentLine();
     setTabsSize(tabsSize);
-    highlighter = new SyntaxHiglighter(document());
 }
 
 inline void CodeEditor::setTabsSize(int size) noexcept
@@ -66,30 +68,31 @@ void CodeEditor::changeModeToFullEdit()
 void CodeEditor::languageChanged(QListWidget* list)
 {
     if (list->currentItem()->text() == "C") // todo: remove magic const
-        highlighter->switchAnalyzer(new AnalyzerC());
+        highlighter.switchAnalyzer(new AnalyzerC());
     else
-        highlighter->switchAnalyzer(new Analyzer());
+        highlighter.switchAnalyzer(new Analyzer());
 
-    highlighter->setDocument(document());
+    highlighter.setDocument(document());
 }
 
 void CodeEditor::openSwitchingLanguageMenu()
 {
-    LanguageList *languageList = new LanguageList();
-    languageList->addItems({"C", "Java", "Non"}); // todo: remove magic const
-    languageList->setWindowModality(Qt::WindowModal);
-    languageList->setFocus();
-    connect(languageList, &QListWidget::itemSelectionChanged, this,
-            [this, languageList]()
+    if (langList != nullptr)
+        delete langList;
+    langList = new LanguageList();
+    langList->addItems({"C", "Java", "Non"}); // todo: remove magic const
+    langList->setWindowModality(Qt::WindowModal);
+    langList->setFocus();
+    connect(langList, &QListWidget::itemSelectionChanged, this,
+            [this]()
             {
-                this->languageChanged(languageList);
+                this->languageChanged(langList);
             }
     );
-    languageList->show();
+    langList->show();
     QEventLoop loop;
     connect(this, SIGNAL(destroyed()), & loop, SLOT(quit()));
     loop.exec();
-    delete languageList;
 }
 
 void CodeEditor::keyPressEventInCommandMode(QKeyEvent *event)
@@ -143,6 +146,7 @@ void CodeEditor::highlightCurrentLine()
 
         selection.format.setBackground(currentLineColor);
         selection.format.setProperty(QTextFormat::FullWidthSelection, true);
+        selection.format.setForeground(currentLineSymbolColor);
         selection.cursor = textCursor();
         selection.cursor.clearSelection();
         extraSelections.append(selection);
@@ -178,13 +182,17 @@ void CodeEditor::changeToDarkTheme()
 {
     setStyleSheet("color: white;");
     currentLineColor = QColor::fromRgb(46, 47, 48);
+    currentLineSymbolColor = QColor::fromRgb(181,104,43);
     highlightCurrentLine();
+    highlighter.turnOnDarkTheme();
+    highlighter.setDocument(document());
 }
 
 void CodeEditor::changeToBrightTheme()
 {
     setStyleSheet("color: black;");
     currentLineColor = Qt::lightGray;
+    currentLineSymbolColor = Qt::black;
     highlightCurrentLine();
 }
 

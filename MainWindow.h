@@ -37,8 +37,8 @@ private slots:
     void on_turnOnBrightTheme_triggered();
 
 private:
+    CodeEditor codeEditor;
     ConsoleOutput* consoleOutput;
-    CodeEditor *codeEditor;
     Ui::MainWindow *ui;
 };
 

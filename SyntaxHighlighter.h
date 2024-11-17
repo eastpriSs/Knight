@@ -12,6 +12,7 @@ public:
     SyntaxHiglighter(QTextDocument *parent = 0);
     void switchAnalyzer(Analyzer*);
 
+    void turnOnDarkTheme();
 private:
     void highlightBlock(const QString&) override;
 

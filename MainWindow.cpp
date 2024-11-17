@@ -14,14 +14,12 @@ MainWindow::MainWindow(QWidget *parent)
 {
     ui->setupUi(this);
 
-    codeEditor = new CodeEditor();
     consoleOutput = nullptr;
-    setCentralWidget(codeEditor);
+    setCentralWidget(&codeEditor);
 }
 
 MainWindow::~MainWindow()
 {
-    delete codeEditor;
     delete ui;
 }
 
@@ -31,12 +29,12 @@ void MainWindow::on_loadAction_triggered()
 {
     QString fileName = QFileDialog::getOpenFileName(this,
                     tr("Выберите файл для загрузки"), ".", tr("Source code (*.txt *.cpp *.c *.lua *.h)"));
-    codeEditor->nameEditingFile = fileName;
+    codeEditor.nameEditingFile = fileName;
     setWindowTitle(fileName);
 
     QFile f(fileName);
     if (f.open(QFile::ReadOnly))
-        codeEditor->setPlainText(f.readAll());
+        codeEditor.setPlainText(f.readAll());
     else
         ui->statusbar->showMessage("Файл не может быть прочитан. Возможно, файл архивирован.");
 }
@@ -44,13 +42,13 @@ void MainWindow::on_loadAction_triggered()
 
 void MainWindow::on_saveAction_triggered()
 {
-    QFile f(codeEditor->nameEditingFile);
+    QFile f(codeEditor.nameEditingFile);
     if (!f.exists()){
         on_saveAsAction_triggered();
     }
     f.open(QFile::WriteOnly);
     QTextStream writeStream(&f);
-    writeStream << codeEditor->toPlainText();
+    writeStream << codeEditor.toPlainText();
 }
 
 
@@ -65,9 +63,9 @@ void MainWindow::on_saveAsAction_triggered()
         return;
     }
     QTextStream writeStream(&f);
-    writeStream << codeEditor->toPlainText();
-    codeEditor->nameEditingFile = fileName;
-    setWindowTitle(codeEditor->nameEditingFile);
+    writeStream << codeEditor.toPlainText();
+    codeEditor.nameEditingFile = fileName;
+    setWindowTitle(codeEditor.nameEditingFile);
 }
 
 
@@ -99,7 +97,7 @@ QString readLineFormFile(const QString& fn)
 void MainWindow::on_sendAction_triggered()
 {
     QString compilerName = readLineFormFile("compiler.cfg");
-    QString command = compilerName + ' ' + codeEditor->nameEditingFile;
+    QString command = compilerName + ' ' + codeEditor.nameEditingFile;
     QProcess cmdProc;
 
     ui->statusbar->showMessage("Sending command: " + command);
@@ -125,6 +123,7 @@ void MainWindow::on_turnOnDarkTheme_triggered()
         "QWidget { background-color: #2e2f30; color: white; }"
         "QPushButton, QLabel, QLineEdit, QTreeWidget, QMenuBar, QMenu::item { color: white; }"
         );
+    codeEditor.changeToDarkTheme();
 
 }
 
