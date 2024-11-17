@@ -119,17 +119,6 @@ void MainWindow::on_sendAction_triggered()
     consoleOutput->show();
 }
 
-void MainWindow::applyTheme(const QString& themeFile)
-{
-    QFile file(themeFile);
-    if (file.open(QFile::ReadOnly)) {
-        qApp->setStyleSheet(file.readAll()); // Применение стиля глобально
-        file.close();
-    } else {
-        qDebug() << "Не удалось загрузить файл темы: " << themeFile;
-    }
-}
-
 void MainWindow::on_turnOnDarkTheme_triggered()
 {
     qApp->setStyleSheet(
