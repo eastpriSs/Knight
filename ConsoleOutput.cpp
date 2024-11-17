@@ -1,5 +1,5 @@
 #include "ConsoleOutput.h"
-#include "ui_consoleoutput.h"
+#include "ui_ConsoleOutput.h"
 
 ConsoleOutput::ConsoleOutput(QWidget *parent)
     : QWidget(parent)

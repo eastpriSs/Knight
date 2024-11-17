@@ -1,5 +1,5 @@
-#include "settingmenusendaction.h"
-#include "ui_settingmenusendaction.h"
+#include "SettingMenuSendAction.h"
+#include "ui_SettingMenuSendAction.h"
 
 SettingMenuSendAction::SettingMenuSendAction(QWidget *parent)
     : QDialog(parent)
@@ -44,4 +44,3 @@ void SettingMenuSendAction::on_treeWidget_itemClicked(QTreeWidgetItem *item, int
 {
     ui->compilerName->setText(item->text(column));
 }
-

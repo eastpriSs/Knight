@@ -3,9 +3,9 @@
 #include <QFileDialog>
 #include <QLabel>
 
-#include "mainwindow.h"
-#include "ui_mainwindow.h"
-#include "settingmenusendaction.h"
+#include "MainWindow.h"
+#include "ui_MainWindow.h"
+#include "SettingMenuSendAction.h"
 
 
 MainWindow::MainWindow(QWidget *parent)
@@ -119,26 +119,33 @@ void MainWindow::on_sendAction_triggered()
     consoleOutput->show();
 }
 
+void MainWindow::applyTheme(const QString& themeFile)
+{
+    QFile file(themeFile);
+    if (file.open(QFile::ReadOnly)) {
+        qApp->setStyleSheet(file.readAll()); // Применение стиля глобально
+        file.close();
+    } else {
+        qDebug() << "Не удалось загрузить файл темы: " << themeFile;
+    }
+}
+
 void MainWindow::on_turnOnDarkTheme_triggered()
 {
-    setStyleSheet("background-color: #2e2f30;");
-    ui->menubar->setStyleSheet("QMenuBar { color: white; }"
-                               "QMenu::item { color: white; }");
-    codeEditor->changeToDarkTheme();
-}
-
-
-void MainWindow::on_turnOnCustomTheme_triggered()
-{
+    qApp->setStyleSheet(
+        "QWidget { background-color: #2e2f30; color: white; }"
+        "QPushButton, QLabel, QLineEdit, QTreeWidget, QMenuBar, QMenu::item { color: white; }"
+        );
 
 }
-
 
 void MainWindow::on_turnOnBrightTheme_triggered()
 {
-    setStyleSheet("background-color: white;");
-    ui->menubar->setStyleSheet("QMenuBar { color: black; } "
-                               "QMenu::item { color: black; }");
-    codeEditor->changeToBrightTheme();
+    qApp->setStyleSheet(
+        "QWidget { background-color: white; color: black; }"
+        "QPushButton, QLabel, QLineEdit, QTreeWidget, QMenuBar, QMenu::item { color: black; }"
+        );
+
 }
+
 

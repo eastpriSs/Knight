@@ -16,12 +16,12 @@ SOURCES += \
     LanguageList.cpp \
     Lexer.cpp \
     LexerC.cpp \
+    MainWindow.cpp \
     Parser.cpp \
+    SettingMenuSendAction.cpp \
     SyntaxHighlighter.cpp \
     Token.cpp \
-    main.cpp \
-    mainwindow.cpp \
-    settingmenusendaction.cpp
+    main.cpp
 
 HEADERS += \
     Analyzer.h \
@@ -31,16 +31,16 @@ HEADERS += \
     LanguageList.h \
     Lexer.h \
     LexerC.h \
+    MainWindow.h \
     Parser.h \
+    SettingMenuSendAction.h \
     SyntaxHighlighter.h \
-    Token.h \
-    mainwindow.h \
-    settingmenusendaction.h
+    Token.h
 
 FORMS += \
-    consoleoutput.ui \
-    mainwindow.ui \
-    settingmenusendaction.ui
+    ConsoleOutput.ui \
+    MainWindow.ui \
+    SettingMenuSendAction.ui
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
