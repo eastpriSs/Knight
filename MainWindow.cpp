@@ -127,13 +127,23 @@ void MainWindow::on_turnOnDarkTheme_triggered()
 
 }
 
-void MainWindow::on_turnOnBrightTheme_triggered()
+void MainWindow::on_turnOnLightTheme_triggered()
 {
     qApp->setStyleSheet(
         "QWidget { background-color: white; color: black; }"
         "QPushButton, QLabel, QLineEdit, QTreeWidget, QMenuBar, QMenu::item { color: black; }"
         );
+    codeEditor.changeToLightTheme();
 
 }
 
+void MainWindow::on_turnOnCurrentLineHighlighter_triggered()
+{
+    codeEditor.turnOnCurrentLineHighlighter();
+}
+
+void MainWindow::on_turnOffCurrentLineHighlighter_triggered()
+{
+    codeEditor.turnOffCurrentLineHighlighter();
+}
 

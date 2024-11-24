@@ -13,6 +13,7 @@ public:
     void switchAnalyzer(Analyzer*);
 
     void turnOnDarkTheme();
+    void turnOnLightTheme();
 private:
     void highlightBlock(const QString&) override;
 

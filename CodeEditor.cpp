@@ -17,8 +17,9 @@ CodeEditor::CodeEditor(QWidget *parent) : QPlainTextEdit(parent)
     connect(this, &CodeEditor::cursorPositionChanged, this, &CodeEditor::highlightCurrentLine);
 
     updateLineNumberAreaWidth(0);
-    currentLineSymbolColor = Qt::black;
-    currentLineColor = Qt::lightGray;
+    highlightEnabled = true;                              // Подсветка включена по умолчанию
+    currentLineSymbolColor = QColor::fromRgb(32, 47, 92); // DarkBlue 2
+    currentLineColor = QColor::fromRgb(173, 205, 255);    // LightBlue 2
     highlightCurrentLine();
     setTabsSize(tabsSize);
 }
@@ -67,7 +68,7 @@ void CodeEditor::changeModeToFullEdit()
 
 void CodeEditor::languageChanged(QListWidget* list)
 {
-    if (list->currentItem()->text() == "C") // todo: remove magic const
+    if (list->currentItem()->text() == "C")         // fix magic const
         highlighter.switchAnalyzer(new AnalyzerC());
     else
         highlighter.switchAnalyzer(new Analyzer());
@@ -80,7 +81,7 @@ void CodeEditor::openSwitchingLanguageMenu()
     if (langList != nullptr)
         delete langList;
     langList = new LanguageList();
-    langList->addItems({"C", "Java", "Non"}); // todo: remove magic const
+    langList->addItems({"C", "Java", "Non"});       // fix magic const
     langList->setWindowModality(Qt::WindowModal);
     langList->setFocus();
     connect(langList, &QListWidget::itemSelectionChanged, this,
@@ -141,7 +142,7 @@ void CodeEditor::highlightCurrentLine()
 {
     QList<QTextEdit::ExtraSelection> extraSelections;
 
-    if (!isReadOnly()) {
+    if (highlightEnabled && !isReadOnly()) {
         QTextEdit::ExtraSelection selection;
 
         selection.format.setBackground(currentLineColor);
@@ -181,22 +182,31 @@ void CodeEditor::lineNumberAreaPaintEvent(QPaintEvent *event)
 void CodeEditor::changeToDarkTheme()
 {
     setStyleSheet("color: white;");
-    currentLineColor = QColor::fromRgb(46, 47, 48);
-    currentLineSymbolColor = QColor::fromRgb(181,104,43);
+    currentLineColor = QColor::fromRgb(53, 57, 66);         // DarkBlue
+    currentLineSymbolColor = QColor::fromRgb(173, 216, 230);// LightBlue
     highlightCurrentLine();
     highlighter.turnOnDarkTheme();
     highlighter.setDocument(document());
 }
 
-void CodeEditor::changeToBrightTheme()
+void CodeEditor::changeToLightTheme()
 {
     setStyleSheet("color: black;");
-    currentLineColor = Qt::lightGray;
-    currentLineSymbolColor = Qt::black;
+    currentLineColor = QColor::fromRgb(173, 205, 255);      // LightBlue 2
+    currentLineSymbolColor = QColor::fromRgb(32, 47, 92);   // DarkBlue 2
+    highlightCurrentLine();
+    highlighter.turnOnLightTheme();
+    highlighter.setDocument(document());
+}
+
+void CodeEditor::turnOnCurrentLineHighlighter()
+{
+    highlightEnabled = true;
     highlightCurrentLine();
 }
 
-void CodeEditor::changeToCustomTheme()
+void CodeEditor::turnOffCurrentLineHighlighter()
 {
-
+    highlightEnabled = false;
+    highlightCurrentLine();
 }

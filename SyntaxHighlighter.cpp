@@ -29,6 +29,13 @@ void SyntaxHiglighter::turnOnDarkTheme()
     macroHighlightingRule.setForeground(Qt::lightGray);
 }
 
+void SyntaxHiglighter::turnOnLightTheme()
+{
+    keywordHighlightingRule.setForeground(QColor::fromRgb(210,67,115));
+    idHighlightingRule.setForeground(QColor::fromRgb(166,117,234));
+    macroHighlightingRule.setForeground(Qt::lightGray);
+}
+
 void SyntaxHiglighter::switchAnalyzer(Analyzer* a)
 {
     if (analyzer != nullptr)

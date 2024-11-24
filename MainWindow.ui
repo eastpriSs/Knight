@@ -38,16 +38,24 @@
     <property name="title">
      <string>Настройка</string>
     </property>
-    <widget class="QMenu" name="menu_2">
+    <widget class="QMenu" name="changeThemeMenu">
      <property name="title">
       <string>Изменить тему</string>
      </property>
-     <addaction name="turnOnBrightTheme"/>
+     <addaction name="turnOnLightTheme"/>
      <addaction name="turnOnDarkTheme"/>
-     <addaction name="turnOnCustomTheme"/>
+    </widget>
+    <widget class="QMenu" name="toggleCurrentLineHighlighter">
+     <property name="title">
+      <string>Выделение строки</string>
+     </property>
+     <addaction name="separator"/>
+     <addaction name="turnOnCurrentLineHighlighter"/>
+     <addaction name="turnOffCurrentLineHighlighter"/>
     </widget>
     <addaction name="sendSettingAction"/>
-    <addaction name="menu_2"/>
+    <addaction name="changeThemeMenu"/>
+    <addaction name="toggleCurrentLineHighlighter"/>
    </widget>
    <widget class="QMenu" name="menu_F5">
     <property name="title">
@@ -90,7 +98,7 @@
     </font>
    </property>
   </action>
-  <action name="turnOnBrightTheme">
+  <action name="turnOnLightTheme">
    <property name="text">
     <string>Светлая</string>
    </property>
@@ -100,9 +108,14 @@
     <string>Тёмная</string>
    </property>
   </action>
-  <action name="turnOnCustomTheme">
+  <action name="turnOnCurrentLineHighlighter">
    <property name="text">
-    <string>Другая</string>
+    <string>Включить</string>
+   </property>
+  </action>
+  <action name="turnOffCurrentLineHighlighter">
+   <property name="text">
+    <string>Выключить</string>
    </property>
   </action>
  </widget>

@@ -34,7 +34,11 @@ private slots:
 
     void on_turnOnDarkTheme_triggered();
 
-    void on_turnOnBrightTheme_triggered();
+    void on_turnOnLightTheme_triggered();
+
+    void on_turnOnCurrentLineHighlighter_triggered();
+
+    void on_turnOffCurrentLineHighlighter_triggered();
 
 private:
     CodeEditor codeEditor;
