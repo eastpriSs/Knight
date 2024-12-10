@@ -12,14 +12,16 @@ SyntaxHiglighter::SyntaxHiglighter(QTextDocument *parent)
     // Id
     idHighlightingRule.setFontItalic(true);
     idHighlightingRule.setFontWeight(QFont::Bold);
-    idHighlightingRule.setForeground(Qt::darkBlue);
 
     // Number
     numHighlightingRule.setFontWordSpacing(10.0);
-    // Macro
-    macroHighlightingRule.setForeground(Qt::darkCyan);
-    // String
-    stringLiterHighlightingRule.setForeground(Qt::darkGreen);
+
+    //Error
+    errorHighlightingRule.setFontUnderline(true);
+    errorHighlightingRule.setUnderlineStyle(QTextCharFormat::WaveUnderline);
+
+    // Colors
+    turnOnLightTheme();
 }
 
 void SyntaxHiglighter::turnOnDarkTheme()
@@ -27,13 +29,17 @@ void SyntaxHiglighter::turnOnDarkTheme()
     keywordHighlightingRule.setForeground(QColor::fromRgb(210,67,115));
     idHighlightingRule.setForeground(QColor::fromRgb(166,117,234));
     macroHighlightingRule.setForeground(Qt::lightGray);
+    operatorHighlightingRule.setForeground(Qt::yellow);
+    errorHighlightingRule.setUnderlineColor(Qt::red);
 }
 
 void SyntaxHiglighter::turnOnLightTheme()
 {
-    keywordHighlightingRule.setForeground(QColor::fromRgb(210,67,115));
-    idHighlightingRule.setForeground(QColor::fromRgb(166,117,234));
-    macroHighlightingRule.setForeground(Qt::lightGray);
+    keywordHighlightingRule.setForeground(Qt::black);
+    idHighlightingRule.setForeground(Qt::darkBlue);
+    macroHighlightingRule.setForeground(Qt::darkCyan);
+    operatorHighlightingRule.setForeground(Qt::black);
+    errorHighlightingRule.setUnderlineColor(Qt::red);
 }
 
 void SyntaxHiglighter::switchAnalyzer(Analyzer* a)
@@ -66,11 +72,16 @@ void SyntaxHiglighter::highlightBlock(const QString& text)
         case ShortType::stringLiter:
             setFormat(token.posStartOfWord, token.posEndOfWord, stringLiterHighlightingRule);
             break;
+        case ShortType::_operator:
+            setFormat(token.posStartOfWord, token.posEndOfWord, operatorHighlightingRule);
+            break;
         case ShortType::unknown:
             setFormat(token.posStartOfWord, token.posEndOfWord, QTextCharFormat());
             break;
 
         default : break;
         }
+        if (token.syntaxError)
+            setFormat(token.posStartOfWord, token.posEndOfWord, errorHighlightingRule);
     }
 }

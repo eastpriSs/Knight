@@ -37,10 +37,12 @@ private :
     void keyPressEventInCommandMode(QKeyEvent *event);
     void keyPressEventInEditMode(QKeyEvent *event);
     void openSwitchingLanguageMenu();
+    void makeNewLine(QKeyEvent*);
+    void makeFormat(QKeyEvent*);
 
 private slots:
     void keyPressEvent(QKeyEvent *event) override;
-    void updateLineNumberAreaWidth(int newBlockCount);
+    void updateLineNumberAreaWidth();
     void highlightCurrentLine();
     void updateLineNumberArea(const QRect &rect, int dy);
     void languageChanged(QListWidget*);
@@ -52,8 +54,7 @@ private:
     CodeEditorStates::codeEditorMode mode = CodeEditorStates::codeEditorMode::fullEditMode;
     QColor currentLineColor;
     QColor currentLineSymbolColor;
-
-    bool highlightEnabled;
+    bool highlightEnabled = true;
 
     QWidget *lineNumberArea;
     LanguageList *langList;

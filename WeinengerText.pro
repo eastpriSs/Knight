@@ -10,7 +10,10 @@ CONFIG += c++17
 
 SOURCES += \
     Analyzer.cpp \
+    AnalyzerApraam.cpp \
     AnalyzerC.cpp \
+    ApraamTranslatorLexer.cpp \
+    ApraamTranslatorParser.cpp \
     CodeEditor.cpp \
     ConsoleOutput.cpp \
     LanguageList.cpp \
@@ -25,7 +28,10 @@ SOURCES += \
 
 HEADERS += \
     Analyzer.h \
+    AnalyzerApraam.h \
     AnalyzerC.h \
+    ApraamTranslatorLexer.h \
+    ApraamTranslatorParser.h \
     CodeEditor.h \
     ConsoleOutput.h \
     LanguageList.h \

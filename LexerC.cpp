@@ -16,7 +16,7 @@ LexerC::LexerC()
     });
 }
 
-QString makeString(const QString::const_iterator& b,
+inline QString makeString(const QString::const_iterator& b,
                    const QString::const_iterator& e)
 {
     QString res;

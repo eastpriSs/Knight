@@ -2,10 +2,10 @@
 #include <QPainter>
 #include <QTextBlock>
 #include <QFontMetrics>
-#include <memory>
 
 #include "LanguageList.h"
 #include "AnalyzerC.h"
+#include "AnalyzerApraam.h"
 
 CodeEditor::CodeEditor(QWidget *parent) : QPlainTextEdit(parent)
 {
@@ -16,17 +16,16 @@ CodeEditor::CodeEditor(QWidget *parent) : QPlainTextEdit(parent)
     connect(this, &CodeEditor::updateRequest, this, &CodeEditor::updateLineNumberArea);
     connect(this, &CodeEditor::cursorPositionChanged, this, &CodeEditor::highlightCurrentLine);
 
-    updateLineNumberAreaWidth(0);
-    highlightEnabled = true;                              // Подсветка включена по умолчанию
-    currentLineSymbolColor = QColor::fromRgb(32, 47, 92); // DarkBlue 2
-    currentLineColor = QColor::fromRgb(173, 205, 255);    // LightBlue 2
-    highlightCurrentLine();
+    updateLineNumberAreaWidth();
+    changeToLightTheme();
+    QFont charFont = QFont();
+    charFont.setPointSize(10); // magic const BIG TODO
+    setFont(charFont);
     setTabsSize(tabsSize);
 }
 
 inline void CodeEditor::setTabsSize(int size) noexcept
 {
-    // add font to code editor
     tabsSize = size;
     setTabStopDistance(QFontMetrics(QFont()).horizontalAdvance(' ') * size * 2);
 }
@@ -36,7 +35,7 @@ int CodeEditor::lineNumberAreaWidth()
     return 100;
 }
 
-void CodeEditor::updateLineNumberAreaWidth(int)
+void CodeEditor::updateLineNumberAreaWidth()
 {
     setViewportMargins(lineNumberAreaWidth(), 0, 0, 0);
 }
@@ -49,7 +48,7 @@ void CodeEditor::updateLineNumberArea(const QRect &rect, int dy)
         lineNumberArea->update(0, rect.y(), lineNumberArea->width(), rect.height());
 
     if (rect.contains(viewport()->rect()))
-        updateLineNumberAreaWidth(0);
+        updateLineNumberAreaWidth();
 }
 
 void CodeEditor::changeModeToCommandInput()
@@ -70,6 +69,8 @@ void CodeEditor::languageChanged(QListWidget* list)
 {
     if (list->currentItem()->text() == "C")         // fix magic const
         highlighter.switchAnalyzer(new AnalyzerC());
+    else if (list->currentItem()->text() == "Apraam")
+        highlighter.switchAnalyzer(new AnalyzerApraam());
     else
         highlighter.switchAnalyzer(new Analyzer());
 
@@ -81,7 +82,6 @@ void CodeEditor::openSwitchingLanguageMenu()
     if (langList != nullptr)
         delete langList;
     langList = new LanguageList();
-    langList->addItems({"C", "Java", "Non"});       // fix magic const
     langList->setWindowModality(Qt::WindowModal);
     langList->setFocus();
     connect(langList, &QListWidget::itemSelectionChanged, this,
@@ -108,12 +108,54 @@ void CodeEditor::keyPressEventInCommandMode(QKeyEvent *event)
     }
 }
 
+void CodeEditor::makeNewLine(QKeyEvent *event)
+{
+    static int amountOfTabs = 0;
+
+    QString text = document()->toPlainText();
+    int  cursorPos = textCursor().position();
+
+    if (cursorPos != 0 && !text.isEmpty())
+    {
+        if (text[cursorPos - 1] == '{')
+            amountOfTabs += 1;
+        else if (text[cursorPos - 1] == '}')
+            amountOfTabs -= 1;
+    }
+
+    QPlainTextEdit::keyPressEvent(event);
+    for (int i = 0; i < amountOfTabs; ++i)
+        insertPlainText("\t");
+}
+
+void CodeEditor::makeFormat(QKeyEvent* event)
+{
+    QString text = document()->toPlainText();
+    int  cursorPos = textCursor().position();
+
+    if (cursorPos >= 2)
+    {
+        if (text[cursorPos - 1] == '=' && text[cursorPos - 2] == '!'){
+            text[cursorPos - 1] = L'≠';
+            text[cursorPos - 2] = L' ';
+            document()->setPlainText(text);
+        }
+    }
+    QPlainTextEdit::keyPressEvent(event);
+}
+
 void CodeEditor::keyPressEventInEditMode(QKeyEvent *event)
 {
     switch(event->key())
     {
     case Qt::Key_Escape:
         changeModeToCommandInput();
+        break;
+    case Qt::Key_Return:
+        makeNewLine(event);
+        break;
+    case Qt::Key_Space:
+        makeFormat(event);
         break;
     default:
         QPlainTextEdit::keyPressEvent(event);
@@ -133,7 +175,6 @@ void CodeEditor::keyPressEvent(QKeyEvent *event)
 void CodeEditor::resizeEvent(QResizeEvent *e)
 {
     QPlainTextEdit::resizeEvent(e);
-
     QRect cr = contentsRect();
     lineNumberArea->setGeometry(QRect(cr.left(), cr.top(), lineNumberAreaWidth(), cr.height()));
 }
@@ -168,7 +209,7 @@ void CodeEditor::lineNumberAreaPaintEvent(QPaintEvent *event)
         if (block.isVisible() && bottom >= event->rect().top()) {
             QString number = QString::number(blockNumber + 1);
             painter.setPen(Qt::black);
-            painter.drawText(0, top, lineNumberArea->width(), fontMetrics().height(),
+            painter.drawText(0, top, lineNumberArea->width(), 20, // magic const height 20 BIG TODO
                              Qt::AlignRight, number);
         }
 

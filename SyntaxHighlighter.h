@@ -23,6 +23,8 @@ private:
     QTextCharFormat numHighlightingRule;
     QTextCharFormat macroHighlightingRule;
     QTextCharFormat stringLiterHighlightingRule;
+    QTextCharFormat operatorHighlightingRule;
+    QTextCharFormat errorHighlightingRule;
     Analyzer *analyzer;
 };
 
