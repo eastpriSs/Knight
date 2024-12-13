@@ -7,20 +7,101 @@ ApraamTranslatorParser::ApraamTranslatorParser(Lexer* l)
     products.push(ApraamTokType::startSymbol);
 }
 
+
+void ApraamTranslatorParser::generateProductsForAnyOperand()
+{
+    products.push(ApraamTokType::regA);
+    products.push(ApraamTokType::regB);
+    products.push(ApraamTokType::id);
+    products.push(ApraamTokType::shift);
+    products.push(ApraamTokType::numberLiteral);
+}
+
+void ApraamTranslatorParser::generateMultctvOperatorProduct()
+{
+    generateProductsForAnyOperand();
+    products.push(ApraamTokType::multiplicativeOperator);
+}
+void ApraamTranslatorParser::generateAdditOperatorProduct()
+{
+    generateProductsForAnyOperand();
+    products.push(ApraamTokType::additiveOperator);
+}
+
+
+void ApraamTranslatorParser::generateProductsForLogicExpression()
+{
+    products.push(ApraamTokType::regA);
+    products.push(ApraamTokType::regB);
+    products.push(ApraamTokType::logicOperator);
+    products.push(ApraamTokType::regA);
+    products.push(ApraamTokType::regB);
+    products.push(ApraamTokType::id);
+    products.push(ApraamTokType::shift);
+}
+
 void ApraamTranslatorParser::generateProducts()
 {
     qDebug() << "Generating for " << (int)currTkn.ttype;
     switch (currTkn.ttype) {
+
+    // Definitions
     case ApraamTokType::VAR:
         products.push(ApraamTokType::numberLiteral);
         products.push(ApraamTokType::id);
         break;
-    case ApraamTokType::id:
-        products.push(ApraamTokType::id);
-        products.push(ApraamTokType::shift);
-        products.push(ApraamTokType::numberLiteral);
-        products.push(ApraamTokType::arithmOperator);
+
+    case ApraamTokType::label:
         break;
+
+    // Expression
+    case ApraamTokType::regA:
+        generateMultctvOperatorProduct();
+        generateAdditOperatorProduct();
+        products.push(ApraamTokType::id);
+        products.push(ApraamTokType::to);
+        products.push(ApraamTokType::id);
+        products.push(ApraamTokType::from);
+        break;
+    case ApraamTokType::regB:
+        generateAdditOperatorProduct();
+        products.push(ApraamTokType::id);
+        products.push(ApraamTokType::to);
+        products.push(ApraamTokType::id);
+        products.push(ApraamTokType::from);
+        break;
+
+    // Trivial operators
+    case ApraamTokType::SWAP:
+    case ApraamTokType::stop:
+        break;
+
+    // Unary-trivial operators
+    case ApraamTokType::PUSH:
+    case ApraamTokType::POP:
+        products.push(ApraamTokType::regA);
+        products.push(ApraamTokType::regB);
+        break;
+
+    // Calling-unary operators
+    case ApraamTokType::jmpConstruction:
+    case ApraamTokType::call:
+        products.push(ApraamTokType::label);
+        break;
+
+    // Unary-nontrivial operators
+    case ApraamTokType::IN:
+    case ApraamTokType::OUT:
+        generateProductsForAnyOperand();
+        break;
+
+    // Condotion operators
+    case ApraamTokType::IF:
+        products.push(ApraamTokType::id);
+        products.push(ApraamTokType::then);
+        generateProductsForLogicExpression();
+        break;
+
     default:
         currTkn.syntaxError = true;
         break;

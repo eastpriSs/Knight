@@ -73,11 +73,16 @@ Token ApraamTranslatorLexer::scanOperand()
             ++forward;
         QString lexem = makeString(it, forward);
 
-        if (table.contains(lexem))
+        if (table.contains(lexem)) {
             return Token(table[lexem], ShortType::keyword);
-        else if (*forward != ':')
+        }
+        else if (*forward != ':') {
+            if (lexem == "a")
+                return Token(TokenType::regA, ShortType::id);
+            else if (lexem == "b")
+                return Token(TokenType::regB, ShortType::id);
             return Token(TokenType::id, ShortType::id);
-
+        }
         ++forward;
         return Token(TokenType::label, ShortType::id);
     }
@@ -97,7 +102,7 @@ Token ApraamTranslatorLexer::scanOperator()
             ++forward;
             return Token(TokenType::logicOperator, ShortType::_operator);
         }
-        return Token(TokenType::arithmOperator, ShortType::_operator);
+        return Token(TokenType::assigmentOperator, ShortType::_operator);
         break;
     }
     case '!':
@@ -117,10 +122,10 @@ Token ApraamTranslatorLexer::scanOperator()
         {
         case '>':
             ++forward;
-            return Token(TokenType::arithmOperator, ShortType::_operator);
+            return Token(TokenType::to, ShortType::_operator);
         case '=':
             ++forward;
-            return Token(TokenType::arithmOperator, ShortType::_operator);
+            return Token(TokenType::additiveOperator, ShortType::_operator);
         }
         break;
     }
@@ -130,7 +135,7 @@ Token ApraamTranslatorLexer::scanOperator()
         {
         case '-':
             ++forward;
-            return Token(TokenType::arithmOperator, ShortType::_operator);
+            return Token(TokenType::from, ShortType::_operator);
         case '=':
             ++forward;
             return Token(TokenType::logicOperator, ShortType::_operator);
@@ -155,7 +160,7 @@ Token ApraamTranslatorLexer::scanOperator()
         {
         case '=':
             ++forward;
-            return Token(TokenType::arithmOperator, ShortType::_operator);
+            return Token(TokenType::additiveOperator, ShortType::_operator);
         }
         break;
     }
@@ -165,7 +170,7 @@ Token ApraamTranslatorLexer::scanOperator()
         {
         case '=':
             ++forward;
-            return Token(TokenType::arithmOperator, ShortType::_operator);
+            return Token(TokenType::multiplicativeOperator, ShortType::_operator);
         }
         break;
     }
@@ -175,7 +180,7 @@ Token ApraamTranslatorLexer::scanOperator()
         {
         case '=':
             ++forward;
-            return Token(TokenType::arithmOperator, ShortType::_operator);
+            return Token(TokenType::multiplicativeOperator, ShortType::_operator);
         }
         break;
     }

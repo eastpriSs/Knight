@@ -10,6 +10,10 @@ class ApraamTranslatorParser final : public Parser
 private:
     QStack<ApraamTokType> products;
 
+    void generateProductsForLogicExpression();
+    void generateProductsForAnyOperand();
+    void generateMultctvOperatorProduct();
+    void generateAdditOperatorProduct();
     void generateProducts();
     void checkTop();
 

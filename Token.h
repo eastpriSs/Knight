@@ -13,7 +13,8 @@ enum class ApraamTokType {
     to,from,plus,mul,sub,div,VAR,shift,operand,
     label,operLess,operBigger,operEqLess,operEqBig,operEq,
     operNotEqual,stop,jmpConstruction,call,ret,then,startSymbol,
-    arithmOperator, logicOperator,
+    additiveOperator, logicOperator, multiplicativeOperator,
+    assigmentOperator, regA, regB,
     eof
 
 };
