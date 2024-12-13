@@ -8,6 +8,29 @@ SettingMenuSendAction::SettingMenuSendAction(QWidget *parent)
     ui->setupUi(this);
 }
 
+
+SettingMenuSendAction::SettingMenuSendAction(const QString& cfg, QWidget *parent)
+    : QDialog(parent)
+    , ui(new Ui::SettingMenuSendAction)
+{
+    ui->setupUi(this);
+    QStringList tmp = cfg.split(' ');
+    QString complrPath;
+    QString flags;
+
+    complrPath.reserve(10);
+    flags.reserve(100);
+
+    QStringList::ConstIterator i = tmp.constBegin();
+    complrPath = *(i++);
+    for (; i != tmp.constEnd(); ++i) {
+        flags += *i;
+        flags += ' ';
+    }
+    ui->compilerName->setText(complrPath);
+    ui->flags->setText(flags);
+}
+
 SettingMenuSendAction::~SettingMenuSendAction()
 {
     delete ui;
@@ -21,8 +44,7 @@ void SettingMenuSendAction::on_confirm_clicked()
 
     QTextStream out(&compilerSettingFile);
     QString outputCommand = ui->compilerName->text() + ' '
-                            + ui->flags->text()      + ' '
-                            + ui->outputExe->text();
+                            + ui->flags->text();
     out << outputCommand << Qt::endl;
     compilerSettingFile.close();
 }
@@ -31,16 +53,4 @@ void SettingMenuSendAction::on_confirm_clicked()
 void SettingMenuSendAction::on_cancel_clicked()
 {
     this->close();
-}
-
-
-void SettingMenuSendAction::on_compilerName_editingFinished()
-{
-
-}
-
-
-void SettingMenuSendAction::on_treeWidget_itemClicked(QTreeWidgetItem *item, int column)
-{
-    ui->compilerName->setText(item->text(column));
 }

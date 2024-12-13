@@ -17,16 +17,12 @@ class SettingMenuSendAction : public QDialog
 
 public:
     explicit SettingMenuSendAction(QWidget *parent = nullptr);
+    explicit SettingMenuSendAction(const QString&, QWidget *parent = nullptr);
     ~SettingMenuSendAction();
 
 private slots:
     void on_confirm_clicked();
-
     void on_cancel_clicked();
-
-    void on_compilerName_editingFinished();
-
-    void on_treeWidget_itemClicked(QTreeWidgetItem *item, int column);
 
 private:
     Ui::SettingMenuSendAction *ui;

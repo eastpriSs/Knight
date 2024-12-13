@@ -68,10 +68,22 @@ void MainWindow::on_saveAsAction_triggered()
     setWindowTitle(codeEditor.nameEditingFile);
 }
 
+QString readLineFormFile(QFile& fn)
+{
+    QTextStream in(&fn);
+    return in.readLine();
+}
 
 void MainWindow::on_sendSettingAction_triggered()
 {
-    SettingMenuSendAction* settingMenu = new SettingMenuSendAction(this);
+    SettingMenuSendAction* settingMenu;
+    QFile compilerSettingFile("compiler.cfg");
+    if (compilerSettingFile.open(QIODevice::ReadOnly))
+        settingMenu = new SettingMenuSendAction(readLineFormFile(compilerSettingFile), this);
+    else
+        settingMenu = new SettingMenuSendAction(this);
+
+    compilerSettingFile.close();
     settingMenu->setWindowModality(Qt::WindowModal);
     settingMenu->exec();
     delete settingMenu;
@@ -86,17 +98,16 @@ void startCmdProc(QProcess& cmdProc, const QString& command)
     cmdProc.waitForFinished();
 }
 
-QString readLineFormFile(const QString& fn)
-{
-    QFile compilerSettingFile(fn);
-    compilerSettingFile.open(QIODevice::ReadOnly);
-    QTextStream in(&compilerSettingFile);
-    return in.readLine();
-}
 
 void MainWindow::on_sendAction_triggered()
 {
-    QString compilerName = readLineFormFile("compiler.cfg");
+    QFile compilerSettingFile("compiler.cfg");
+    if (!compilerSettingFile.open(QIODevice::ReadOnly)){
+        compilerSettingFile.close();
+        ui->statusbar->showMessage("File \"compiler.cfg\" did not found.");
+        return;
+    }
+    QString compilerName = readLineFormFile(compilerSettingFile);
     QString command = compilerName + ' ' + codeEditor.nameEditingFile;
     QProcess cmdProc;
 
@@ -113,6 +124,7 @@ void MainWindow::on_sendAction_triggered()
     if (consoleOutput != nullptr)
         delete consoleOutput;
 
+    compilerSettingFile.close();
     consoleOutput = new ConsoleOutput(standardOut, errorOut, result);
     consoleOutput->show();
 }

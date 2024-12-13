@@ -61,82 +61,7 @@
       <item>
        <widget class="QLineEdit" name="compilerName"/>
       </item>
-      <item>
-       <widget class="QTreeWidget" name="treeWidget">
-        <property name="enabled">
-         <bool>true</bool>
-        </property>
-        <attribute name="headerVisible">
-         <bool>true</bool>
-        </attribute>
-        <column>
-         <property name="text">
-          <string>Языки</string>
-         </property>
-         <property name="font">
-          <font>
-           <family>Wide Latin</family>
-           <pointsize>12</pointsize>
-          </font>
-         </property>
-        </column>
-        <item>
-         <property name="text">
-          <string>C++</string>
-         </property>
-         <property name="font">
-          <font>
-           <family>Snap ITC</family>
-           <pointsize>12</pointsize>
-          </font>
-         </property>
-         <item>
-          <property name="text">
-           <string>g++</string>
-          </property>
-         </item>
-         <item>
-          <property name="text">
-           <string>clang++</string>
-          </property>
-         </item>
-         <item>
-          <property name="text">
-           <string>gcc</string>
-          </property>
-         </item>
-        </item>
-        <item>
-         <property name="text">
-          <string>Java</string>
-         </property>
-         <property name="font">
-          <font>
-           <family>Ravie</family>
-           <pointsize>12</pointsize>
-          </font>
-         </property>
-         <item>
-          <property name="text">
-           <string>javac</string>
-          </property>
-         </item>
-        </item>
-       </widget>
-      </item>
      </layout>
-    </item>
-    <item>
-     <widget class="QLabel" name="label_4">
-      <property name="font">
-       <font>
-        <family>Microsoft New Tai Lue</family>
-       </font>
-      </property>
-      <property name="text">
-       <string>Убедитесь в том, что выбранный вами компилятор можно вызвать из терминала.</string>
-      </property>
-     </widget>
     </item>
     <item>
      <widget class="Line" name="line">
@@ -144,19 +69,6 @@
        <enum>Qt::Orientation::Horizontal</enum>
       </property>
      </widget>
-    </item>
-    <item>
-     <spacer name="verticalSpacer">
-      <property name="orientation">
-       <enum>Qt::Orientation::Vertical</enum>
-      </property>
-      <property name="sizeHint" stdset="0">
-       <size>
-        <width>20</width>
-        <height>40</height>
-       </size>
-      </property>
-     </spacer>
     </item>
     <item>
      <layout class="QHBoxLayout" name="horizontalLayout_3">
@@ -169,33 +81,6 @@
       </item>
       <item>
        <widget class="QLineEdit" name="flags"/>
-      </item>
-     </layout>
-    </item>
-    <item>
-     <spacer name="verticalSpacer_2">
-      <property name="orientation">
-       <enum>Qt::Orientation::Vertical</enum>
-      </property>
-      <property name="sizeHint" stdset="0">
-       <size>
-        <width>20</width>
-        <height>40</height>
-       </size>
-      </property>
-     </spacer>
-    </item>
-    <item>
-     <layout class="QHBoxLayout" name="horizontalLayout_4">
-      <item>
-       <widget class="QLabel" name="label_3">
-        <property name="text">
-         <string>Имя выходного файла</string>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QLineEdit" name="outputExe"/>
       </item>
      </layout>
     </item>
