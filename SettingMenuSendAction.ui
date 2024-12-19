@@ -54,7 +54,7 @@
       <item>
        <widget class="QLabel" name="label">
         <property name="text">
-         <string>Компилятор</string>
+         <string>Путь к компилятору</string>
         </property>
        </widget>
       </item>

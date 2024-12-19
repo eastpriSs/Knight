@@ -6,6 +6,14 @@ Analyzer::Analyzer()
     pars = new Parser(lex);
 }
 
+Analyzer::Analyzer(Logger* l)
+{
+    lex = new Lexer("");
+    pars = new Parser(lex);
+    logger = l;
+}
+
+
 Token Analyzer::getAnalysedToken()
 {
     return pars->parse();

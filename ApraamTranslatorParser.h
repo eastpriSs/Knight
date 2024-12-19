@@ -19,6 +19,7 @@ private:
 
 public:
     ApraamTranslatorParser(Lexer*);
+    ApraamTranslatorParser(Lexer*, Logger*);
     Token parse() override;
 };
 

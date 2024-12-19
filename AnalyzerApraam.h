@@ -7,6 +7,7 @@ class AnalyzerApraam final : public Analyzer
 {
 public:
     AnalyzerApraam();
+    AnalyzerApraam(Logger*);
     Token getAnalysedToken() override;
 };
 

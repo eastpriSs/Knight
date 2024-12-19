@@ -16,10 +16,13 @@ SOURCES += \
     ApraamTranslatorParser.cpp \
     CodeEditor.cpp \
     ConsoleOutput.cpp \
+    HintLogger.cpp \
     LanguageList.cpp \
     Lexer.cpp \
     LexerC.cpp \
+    Logger.cpp \
     MainWindow.cpp \
+    MenuBarLogger.cpp \
     Parser.cpp \
     SettingMenuSendAction.cpp \
     SyntaxHighlighter.cpp \
@@ -34,10 +37,13 @@ HEADERS += \
     ApraamTranslatorParser.h \
     CodeEditor.h \
     ConsoleOutput.h \
+    HintLogger.h \
     LanguageList.h \
     Lexer.h \
     LexerC.h \
+    Logger.h \
     MainWindow.h \
+    MenuBarLogger.h \
     Parser.h \
     SettingMenuSendAction.h \
     SyntaxHighlighter.h \

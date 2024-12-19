@@ -7,6 +7,7 @@
 
 #include "SyntaxHighlighter.h"
 #include "LanguageList.h"
+#include "HintLogger.h"
 
 namespace CodeEditorStates
 {
@@ -50,7 +51,8 @@ private slots:
 
 private:
     int tabsSize = 4;
-    SyntaxHiglighter highlighter = SyntaxHiglighter(document());;
+    HintLogger logger = HintLogger(this);
+    SyntaxHiglighter highlighter = SyntaxHiglighter(document());
     CodeEditorStates::codeEditorMode mode = CodeEditorStates::codeEditorMode::fullEditMode;
     QColor currentLineColor;
     QColor currentLineSymbolColor;

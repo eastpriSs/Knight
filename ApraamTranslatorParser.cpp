@@ -7,6 +7,11 @@ ApraamTranslatorParser::ApraamTranslatorParser(Lexer* l)
     products.push(ApraamTokType::startSymbol);
 }
 
+ApraamTranslatorParser::ApraamTranslatorParser(Lexer* l, Logger* lg)
+    : Parser(l, lg)
+{
+    products.push(ApraamTokType::startSymbol);
+}
 
 void ApraamTranslatorParser::generateProductsForAnyOperand()
 {
@@ -86,7 +91,7 @@ void ApraamTranslatorParser::generateProducts()
     // Calling-unary operators
     case ApraamTokType::jmpConstruction:
     case ApraamTokType::call:
-        products.push(ApraamTokType::label);
+        products.push(ApraamTokType::id);
         break;
 
     // Unary-nontrivial operators
@@ -95,7 +100,7 @@ void ApraamTranslatorParser::generateProducts()
         generateProductsForAnyOperand();
         break;
 
-    // Condotion operators
+    // Condition operators
     case ApraamTokType::IF:
         products.push(ApraamTokType::id);
         products.push(ApraamTokType::then);
@@ -119,9 +124,10 @@ void ApraamTranslatorParser::checkTop()
         }
         expected = products.pop();
     }
-    if (!matched)
+    if (!matched) {
         currTkn.syntaxError = true;
-
+        logger->write("Syntax error");
+    }
     qDebug() << "SyntaxError:" << currTkn.syntaxError << "type:" << (int)currTkn.ttype << "expected:" << (int)expected;
 }
 

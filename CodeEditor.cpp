@@ -2,6 +2,7 @@
 #include <QPainter>
 #include <QTextBlock>
 #include <QFontMetrics>
+#include <QToolTip>
 
 #include "LanguageList.h"
 #include "AnalyzerC.h"
@@ -70,7 +71,7 @@ void CodeEditor::languageChanged(QListWidget* list)
     if (list->currentItem()->text() == "C")         // fix magic const
         highlighter.switchAnalyzer(new AnalyzerC());
     else if (list->currentItem()->text() == "Apraam")
-        highlighter.switchAnalyzer(new AnalyzerApraam());
+        highlighter.switchAnalyzer(new AnalyzerApraam(&logger));
     else
         highlighter.switchAnalyzer(new Analyzer());
 
