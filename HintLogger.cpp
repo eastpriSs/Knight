@@ -8,5 +8,5 @@ HintLogger::HintLogger(QPlainTextEdit* t)
 
 void HintLogger::write(const QString& m)
 {
-    QToolTip::showText(text->mapToGlobal(text->cursorRect().center()), m, text, text->cursorRect());
+    QToolTip::showText(text->mapToGlobal(QPoint(text->width()/2, text->height()/2)), m, text, QRect(100,100,100,100), 3000);
 }

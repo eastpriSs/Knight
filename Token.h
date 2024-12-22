@@ -14,7 +14,7 @@ enum class ApraamTokType {
     label,operLess,operBigger,operEqLess,operEqBig,operEq,
     operNotEqual,stop,jmpConstruction,call,ret,then,startSymbol,
     additiveOperator, logicOperator, multiplicativeOperator,
-    assigmentOperator, regA, regB,
+    assigmentOperator, regA, regB, blockSymbol,
     eof
 
 };

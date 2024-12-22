@@ -15,6 +15,7 @@ private:
     void generateMultctvOperatorProduct();
     void generateAdditOperatorProduct();
     void generateProducts();
+    bool findInVariativeProducts(const ApraamTokType&);
     void checkTop();
 
 public:
