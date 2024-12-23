@@ -68,13 +68,15 @@ void CodeEditor::changeModeToFullEdit()
 
 void CodeEditor::languageChanged(QListWidget* list)
 {
-    if (list->currentItem()->text() == "C")         // fix magic const
+    logger.hide();
+    if (list->currentItem()->text() == "C")  {   // fix magic const
         highlighter.switchAnalyzer(new AnalyzerC());
-    else if (list->currentItem()->text() == "Apraam")
+    } else if (list->currentItem()->text() == "Apraam") {
+        logger.show();
         highlighter.switchAnalyzer(new AnalyzerApraam(&logger));
-    else
+    } else {
         highlighter.switchAnalyzer(new Analyzer());
-
+    }
     highlighter.setDocument(document());
 }
 

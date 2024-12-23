@@ -9,13 +9,13 @@ class ApraamTranslatorParser final : public Parser
 {
 private:
     QStack<ApraamTokType> products;
+    QList<ApraamTokType> expected;
 
     void generateProductsForLogicExpression();
     void generateProductsForAnyOperand();
     void generateMultctvOperatorProduct();
     void generateAdditOperatorProduct();
     void generateProducts();
-    bool findInVariativeProducts(const ApraamTokType&);
     void checkTop();
 
 public:

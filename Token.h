@@ -29,6 +29,7 @@ public:
     ApraamTokType ttype = ApraamTokType::eof;
     int posStartOfWord = 0;
     int posEndOfWord = 0;
+    int linePosition = 0;
     bool syntaxError = false;
 };
 

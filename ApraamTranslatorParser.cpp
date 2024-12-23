@@ -40,11 +40,11 @@ inline const QHash<ApraamTokType, QString> tokenStrEquivalent =
     {ApraamTokType::assigmentOperator, "Оператор присваивания"},
     {ApraamTokType::regA, "Регистр A"},
     {ApraamTokType::regB, "Регистр B"},
+    {ApraamTokType::to, "to"},
+    {ApraamTokType::from, "from"},
     {ApraamTokType::eof, "Конец файла"}
 };
 
-#include "ApraamTranslatorParser.h"
-#include <QDebug>
 
 ApraamTranslatorParser::ApraamTranslatorParser(Lexer* l)
     : Parser(l)
@@ -58,8 +58,21 @@ ApraamTranslatorParser::ApraamTranslatorParser(Lexer* l, Logger* lg)
     products.push(ApraamTokType::startSymbol);
 }
 
+QString makeInfoMessage(const QList<ApraamTokType>& expctd, const ApraamTokType& found)
+{
+    QString message = "Ожидался один из следующих символов:\n";
+    foreach (const ApraamTokType& i, expctd) {
+        message += tokenStrEquivalent[i];
+        message += ",\n";
+    }
+    message += "но найден ";
+    message += tokenStrEquivalent[found];
+    return message;
+}
+
 void ApraamTranslatorParser::generateProductsForAnyOperand()
 {
+    products.push(ApraamTokType::blockSymbol);
     products.push(ApraamTokType::regA);
     products.push(ApraamTokType::regB);
     products.push(ApraamTokType::id);
@@ -70,6 +83,7 @@ void ApraamTranslatorParser::generateProductsForAnyOperand()
 void ApraamTranslatorParser::generateMultctvOperatorProduct()
 {
     generateProductsForAnyOperand(); // a /= b ??
+    products.push(ApraamTokType::blockSymbol);
     products.push(ApraamTokType::multiplicativeOperator);
 }
 void ApraamTranslatorParser::generateAdditOperatorProduct()
@@ -83,7 +97,9 @@ void ApraamTranslatorParser::generateProductsForLogicExpression()
 {
     products.push(ApraamTokType::regB);
     products.push(ApraamTokType::regA);
+    products.push(ApraamTokType::blockSymbol);
     products.push(ApraamTokType::logicOperator);
+    products.push(ApraamTokType::blockSymbol);
     products.push(ApraamTokType::regA);
     products.push(ApraamTokType::regB);
     products.push(ApraamTokType::id);
@@ -97,7 +113,9 @@ void ApraamTranslatorParser::generateProducts()
 
     // Definitions
     case ApraamTokType::VAR:
+        products.push(ApraamTokType::blockSymbol);
         products.push(ApraamTokType::numberLiteral);
+        products.push(ApraamTokType::blockSymbol);
         products.push(ApraamTokType::id);
         break;
 
@@ -106,18 +124,20 @@ void ApraamTranslatorParser::generateProducts()
 
         // Expression
     case ApraamTokType::regA:
-        generateMultctvOperatorProduct();
-        generateAdditOperatorProduct();
-        products.push(ApraamTokType::id);
+        generateProductsForAnyOperand(); // a /= b ??
+        products.push(ApraamTokType::blockSymbol);
+        products.push(ApraamTokType::multiplicativeOperator);
+        products.push(ApraamTokType::additiveOperator);
+        products.push(ApraamTokType::assigmentOperator);
         products.push(ApraamTokType::to);
-        products.push(ApraamTokType::id);
         products.push(ApraamTokType::from);
         break;
     case ApraamTokType::regB:
-        generateAdditOperatorProduct();
-        products.push(ApraamTokType::id);
+        generateProductsForAnyOperand();
+        products.push(ApraamTokType::blockSymbol);
+        products.push(ApraamTokType::additiveOperator);
+        products.push(ApraamTokType::assigmentOperator);
         products.push(ApraamTokType::to);
-        products.push(ApraamTokType::id);
         products.push(ApraamTokType::from);
         break;
 
@@ -147,14 +167,16 @@ void ApraamTranslatorParser::generateProducts()
 
         // Condition operators
     case ApraamTokType::IF:
+        products.push(ApraamTokType::blockSymbol);
         products.push(ApraamTokType::id);
+        products.push(ApraamTokType::blockSymbol);
         products.push(ApraamTokType::then);
         products.push(ApraamTokType::blockSymbol);
         generateProductsForLogicExpression();
         break;
 
     default:
-        currTkn.syntaxError = true;
+        //currTkn.syntaxError = true;
         break;
     }
 }
@@ -166,25 +188,32 @@ void ApraamTranslatorParser::checkTop()
         qDebug() << '(' << (int)currTkn.ttype << ',' << (int)products.top() << ')';
         if (products.top() == ApraamTokType::startSymbol || products.top() == ApraamTokType::blockSymbol)
             break;
-        products.pop();
+        expected += products.pop();
+    }
+
+    if (currTkn.ttype != products.top()) {
+        currTkn.syntaxError = true;
+    } else {
+        while (products.top() != ApraamTokType::startSymbol && products.top() != ApraamTokType::blockSymbol)
+            products.pop();
     }
 
     if (products.top() == ApraamTokType::blockSymbol)
         products.pop();
 
-    if (currTkn.ttype != products.top()) {
-        currTkn.syntaxError = true;
-    }
+
     qDebug() << "SyntaxError:" << currTkn.syntaxError << "type:" << (int)currTkn.ttype;
 }
 
 Token ApraamTranslatorParser::parse()
 {
     currTkn = lex->scan();
+    expected.clear();
     if (products.top() == ApraamTokType::startSymbol)
         generateProducts();
     else
         checkTop();
 
+    logger->write(makeInfoMessage(expected, currTkn.ttype));
     return currTkn;
 }

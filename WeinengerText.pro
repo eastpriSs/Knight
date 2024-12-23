@@ -16,10 +16,10 @@ SOURCES += \
     ApraamTranslatorParser.cpp \
     CodeEditor.cpp \
     ConsoleOutput.cpp \
-    HintLogger.cpp \
     LanguageList.cpp \
     Lexer.cpp \
     LexerC.cpp \
+    ListLogger.cpp \
     Logger.cpp \
     MainWindow.cpp \
     MenuBarLogger.cpp \
@@ -37,10 +37,10 @@ HEADERS += \
     ApraamTranslatorParser.h \
     CodeEditor.h \
     ConsoleOutput.h \
-    HintLogger.h \
     LanguageList.h \
     Lexer.h \
     LexerC.h \
+    ListLogger.h \
     Logger.h \
     MainWindow.h \
     MenuBarLogger.h \
