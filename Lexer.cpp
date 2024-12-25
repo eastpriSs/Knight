@@ -9,6 +9,11 @@ Lexer::Lexer(const QString& block)
 }
 
 
+void Lexer::setCompleterModel(QStringListModel* m)
+{
+    m->setStringList(keywords);
+}
+
 void Lexer::setScanningBlock(const QString& b)
 {
     begin = b.constBegin();

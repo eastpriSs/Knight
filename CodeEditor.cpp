@@ -3,6 +3,8 @@
 #include <QTextBlock>
 #include <QFontMetrics>
 #include <QToolTip>
+#include <QScrollBar>
+#include <QStringListModel>
 
 #include "LanguageList.h"
 #include "AnalyzerC.h"
@@ -12,10 +14,12 @@ CodeEditor::CodeEditor(QWidget *parent) : QPlainTextEdit(parent)
 {
     lineNumberArea = new LineNumberArea(this);
     langList = nullptr;
+    setCompleter(new QCompleter(this));
 
     connect(this, &CodeEditor::blockCountChanged, this, &CodeEditor::updateLineNumberAreaWidth);
     connect(this, &CodeEditor::updateRequest, this, &CodeEditor::updateLineNumberArea);
     connect(this, &CodeEditor::cursorPositionChanged, this, &CodeEditor::highlightCurrentLine);
+    connect(this, &QPlainTextEdit::textChanged, this, &CodeEditor::updateCompleterPrefix);
 
     updateLineNumberAreaWidth();
     changeToLightTheme();
@@ -23,6 +27,52 @@ CodeEditor::CodeEditor(QWidget *parent) : QPlainTextEdit(parent)
     charFont.setPointSize(10); // magic const BIG TODO
     setFont(charFont);
     setTabsSize(tabsSize);
+}
+
+void CodeEditor::setCompleter(QCompleter *completer)
+{
+    if (compltr)
+        compltr->disconnect(this);
+
+    compltr = completer;
+
+    if (!compltr)
+        return;
+
+    compltr->setModel(new QStringListModel({"someone"}));
+    compltr->setModelSorting(QCompleter::CaseInsensitivelySortedModel);
+    compltr->setCaseSensitivity(Qt::CaseInsensitive);
+    compltr->setWrapAround(false);
+    compltr->setWidget(this);
+    compltr->setCompletionMode(QCompleter::PopupCompletion);
+    connect(compltr, QOverload<const QString &>::of(&QCompleter::activated),
+                     this, &CodeEditor::insertCompletion);
+}
+
+void CodeEditor::insertCompletion(const QString &completion)
+{
+    if (compltr->widget() != this)
+        return;
+    QTextCursor tc = textCursor();
+    int extra = completion.length() - compltr->completionPrefix().length();
+    tc.movePosition(QTextCursor::Left);
+    tc.movePosition(QTextCursor::EndOfWord);
+    tc.insertText(completion.right(extra));
+    setTextCursor(tc);
+}
+
+QString CodeEditor::textUnderCursor() const
+{
+    QTextCursor tc = textCursor();
+    tc.select(QTextCursor::WordUnderCursor);
+    return tc.selectedText();
+}
+
+void CodeEditor::focusInEvent(QFocusEvent *e)
+{
+    if (compltr)
+        compltr->setWidget(this);
+    QPlainTextEdit::focusInEvent(e);
 }
 
 inline void CodeEditor::setTabsSize(int size) noexcept
@@ -69,8 +119,8 @@ void CodeEditor::changeModeToFullEdit()
 void CodeEditor::languageChanged(QListWidget* list)
 {
     logger.hide();
-    if (list->currentItem()->text() == "C")  {   // fix magic const
-        highlighter.switchAnalyzer(new AnalyzerC());
+    if (list->currentItem()->text() == "C")  {
+        highlighter.switchAnalyzer(new AnalyzerC(dynamic_cast<QStringListModel*>(compltr->model())));
     } else if (list->currentItem()->text() == "Apraam") {
         logger.show();
         highlighter.switchAnalyzer(new AnalyzerApraam(&logger));
@@ -111,58 +161,53 @@ void CodeEditor::keyPressEventInCommandMode(QKeyEvent *event)
     }
 }
 
-void CodeEditor::makeNewLine(QKeyEvent *event)
-{
-    static int amountOfTabs = 0;
 
-    QString text = document()->toPlainText();
-    int  cursorPos = textCursor().position();
-
-    if (cursorPos != 0 && !text.isEmpty())
-    {
-        if (text[cursorPos - 1] == '{')
-            amountOfTabs += 1;
-        else if (text[cursorPos - 1] == '}')
-            amountOfTabs -= 1;
+void CodeEditor::updateCompleterPrefix() {
+    QString prefix = textUnderCursor();
+    if (!prefix.isEmpty()) {
+        qDebug() << textUnderCursor();
+        compltr->setCompletionPrefix(prefix);
+        compltr->complete();
     }
-
-    QPlainTextEdit::keyPressEvent(event);
-    for (int i = 0; i < amountOfTabs; ++i)
-        insertPlainText("\t");
-}
-
-void CodeEditor::makeFormat(QKeyEvent* event)
-{
-    QString text = document()->toPlainText();
-    int  cursorPos = textCursor().position();
-
-    if (cursorPos >= 2)
-    {
-        if (text[cursorPos - 1] == '=' && text[cursorPos - 2] == '!'){
-            text[cursorPos - 1] = L'≠';
-            text[cursorPos - 2] = L' ';
-            document()->setPlainText(text);
-        }
+    else {
+        compltr->popup()->hide();
     }
-    QPlainTextEdit::keyPressEvent(event);
 }
 
 void CodeEditor::keyPressEventInEditMode(QKeyEvent *event)
 {
-    switch(event->key())
-    {
-    case Qt::Key_Escape:
-        changeModeToCommandInput();
-        break;
-    case Qt::Key_Return:
-        makeNewLine(event);
-        break;
-    case Qt::Key_Space:
-        makeFormat(event);
-        break;
-    default:
-        QPlainTextEdit::keyPressEvent(event);
+    if (compltr && compltr->popup()->isVisible()) {
+        switch (event->key()) {
+        case Qt::Key_Enter:
+        case Qt::Key_Return:
+        case Qt::Key_Escape:
+        case Qt::Key_Up:
+        case Qt::Key_Down:
+        case Qt::Key_PageUp:
+        case Qt::Key_PageDown:
+            compltr->popup()->hide();
+            event->ignore();
+            return;
+        }
     }
+    else if (event->key() == Qt::Key_Escape) {
+        if (mode == CodeEditorStates::commandMode)
+            changeModeToFullEdit();
+        else
+            changeModeToCommandInput();
+    }
+    if (event->key() == Qt::Key_Enter || event->key() == Qt::Key_Return) {
+        if (compltr) {
+            if (compltr->popup()->isVisible()) {
+                compltr->popup()->hide();
+                event->accept();
+            } else {
+                QPlainTextEdit::keyPressEvent(event);
+            }
+        }
+        return;
+    }
+    QPlainTextEdit::keyPressEvent(event);
 }
 
 void CodeEditor::keyPressEvent(QKeyEvent *event)

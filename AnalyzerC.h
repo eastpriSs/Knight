@@ -6,7 +6,7 @@
 class AnalyzerC final : public Analyzer
 {
 public:
-    AnalyzerC();
+    AnalyzerC(QStringListModel*);
     Token getAnalysedToken() override;
 };
 

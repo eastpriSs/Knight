@@ -4,6 +4,7 @@
 #include <QPlainTextEdit>
 #include <QObject>
 #include <QListWidget>
+#include <QCompleter>
 
 #include "SyntaxHighlighter.h"
 #include "LanguageList.h"
@@ -28,9 +29,12 @@ public:
     void changeToLightTheme();
     void turnOnCurrentLineHighlighter();
     void turnOffCurrentLineHighlighter();
+    void setCompleter(QCompleter *c);
+    QCompleter *completer() const;
 
 protected:
     void resizeEvent(QResizeEvent *event) override;
+    void focusInEvent(QFocusEvent *e) override;
 
 private :
     void changeModeToFullEdit();
@@ -38,8 +42,8 @@ private :
     void keyPressEventInCommandMode(QKeyEvent *event);
     void keyPressEventInEditMode(QKeyEvent *event);
     void openSwitchingLanguageMenu();
-    void makeNewLine(QKeyEvent*);
-    void makeFormat(QKeyEvent*);
+    void updateCompleterPrefix();
+    QString textUnderCursor() const;
 
 private slots:
     void keyPressEvent(QKeyEvent *event) override;
@@ -48,6 +52,7 @@ private slots:
     void updateLineNumberArea(const QRect &rect, int dy);
     void languageChanged(QListWidget*);
     inline void setTabsSize(int size) noexcept;
+    void insertCompletion(const QString &completion);
 
 private:
     int tabsSize = 4;
@@ -60,6 +65,7 @@ private:
 
     QWidget *lineNumberArea;
     LanguageList *langList;
+    QCompleter *compltr = nullptr;
 };
 
 class LineNumberArea : public QWidget

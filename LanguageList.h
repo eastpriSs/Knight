@@ -9,7 +9,7 @@ class LanguageList final : public QListWidget
 {
 
 private:
-    const QList<QString> languages = {"C", "Java", "Apraam", "Non"};
+    const QList<QString> languages = {"C", "Apraam", "Non"};
 
 private slots:
     void keyPressEvent(QKeyEvent*) override;
