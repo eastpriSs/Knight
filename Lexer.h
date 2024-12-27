@@ -14,10 +14,10 @@ protected:
     QString::ConstIterator forward;
 
 public:
-    Lexer() = delete;
+    Lexer() = default;
     Lexer(const QString&);
     void setScanningBlock(const QString&);
-    void setCompleterModel(QStringListModel*);
+    void fillCompleterModel(QStringListModel*);
     virtual void addKeyword(QString&&);
     virtual Token scan();
     virtual ~Lexer() = default;

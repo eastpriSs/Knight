@@ -14,7 +14,8 @@ CodeEditor::CodeEditor(QWidget *parent) : QPlainTextEdit(parent)
 {
     lineNumberArea = new LineNumberArea(this);
     langList = nullptr;
-    setCompleter(new QCompleter(this));
+    mode = codeEditorMode::fullEditMode;
+    setUpCompleter(new QCompleter(this));
 
     connect(this, &CodeEditor::blockCountChanged, this, &CodeEditor::updateLineNumberAreaWidth);
     connect(this, &CodeEditor::updateRequest, this, &CodeEditor::updateLineNumberArea);
@@ -26,10 +27,10 @@ CodeEditor::CodeEditor(QWidget *parent) : QPlainTextEdit(parent)
     QFont charFont = QFont();
     charFont.setPointSize(10); // magic const BIG TODO
     setFont(charFont);
-    setTabsSize(tabsSize);
+    setTabsSize(4);
 }
 
-void CodeEditor::setCompleter(QCompleter *completer)
+void CodeEditor::setUpCompleter(QCompleter *completer)
 {
     if (compltr)
         compltr->disconnect(this);
@@ -75,7 +76,7 @@ void CodeEditor::focusInEvent(QFocusEvent *e)
     QPlainTextEdit::focusInEvent(e);
 }
 
-inline void CodeEditor::setTabsSize(int size) noexcept
+void CodeEditor::setTabsSize(const int& size) noexcept
 {
     tabsSize = size;
     setTabStopDistance(QFontMetrics(QFont()).horizontalAdvance(' ') * size * 2);
@@ -104,14 +105,14 @@ void CodeEditor::updateLineNumberArea(const QRect &rect, int dy)
 
 void CodeEditor::changeModeToCommandInput()
 {
-    mode = CodeEditorStates::codeEditorMode::commandMode;
+    mode = codeEditorMode::commandMode;
     setFixedHeight(height() - 100);
     setReadOnly(true);
 }
 
 void CodeEditor::changeModeToFullEdit()
 {
-    mode = CodeEditorStates::codeEditorMode::fullEditMode;
+    mode = codeEditorMode::fullEditMode;
     setFixedHeight(height() + 100);
     setReadOnly(false);
 }
@@ -121,7 +122,7 @@ void CodeEditor::languageChanged(QListWidget* list)
     logger.hide();
     if (list->currentItem()->text() == "C")  {
         highlighter.switchAnalyzer(new AnalyzerC(dynamic_cast<QStringListModel*>(compltr->model())));
-    } else if (list->currentItem()->text() == "Apraam") {
+    } else if (list->currentItem()->text() == "Apraam Simcode") {
         logger.show();
         highlighter.switchAnalyzer(new AnalyzerApraam(&logger));
     } else {
@@ -134,7 +135,8 @@ void CodeEditor::openSwitchingLanguageMenu()
 {
     if (langList != nullptr)
         delete langList;
-    langList = new LanguageList();
+
+    langList = new LanguageList(supportedLanguages);
     langList->setWindowModality(Qt::WindowModal);
     langList->setFocus();
     connect(langList, &QListWidget::itemSelectionChanged, this,
@@ -191,7 +193,7 @@ void CodeEditor::keyPressEventInEditMode(QKeyEvent *event)
         }
     }
     else if (event->key() == Qt::Key_Escape) {
-        if (mode == CodeEditorStates::commandMode)
+        if (mode == commandMode)
             changeModeToFullEdit();
         else
             changeModeToCommandInput();
@@ -212,8 +214,6 @@ void CodeEditor::keyPressEventInEditMode(QKeyEvent *event)
 
 void CodeEditor::keyPressEvent(QKeyEvent *event)
 {
-    using namespace CodeEditorStates;
-
     if (mode == codeEditorMode::commandMode)
         keyPressEventInCommandMode(event);
     else if (mode == codeEditorMode::fullEditMode)

@@ -1,7 +1,8 @@
 #include "LanguageList.h"
 #include <QKeyEvent>
 
-LanguageList::LanguageList()
+LanguageList::LanguageList(const QList<QString>& list)
+    : languages(list)
 {
     addItems(languages);
 }

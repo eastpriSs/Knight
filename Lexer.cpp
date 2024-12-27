@@ -9,7 +9,7 @@ Lexer::Lexer(const QString& block)
 }
 
 
-void Lexer::setCompleterModel(QStringListModel* m)
+void Lexer::fillCompleterModel(QStringListModel* m)
 {
     m->setStringList(keywords);
 }
@@ -28,6 +28,5 @@ void Lexer::addKeyword(QString&& kw)
 
 Token Lexer::scan()
 {
-    // todo highlighting nums
     return Token();
 }

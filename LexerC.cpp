@@ -37,7 +37,7 @@ Token LexerC::scanNumber()
 {
     Token res;
     while(forward->isDigit()) ++forward;
-    res.stype = ShortType::num;
+    res.stype = ShortTokType::num;
     return res;
 }
 
@@ -46,9 +46,9 @@ Token LexerC::scanIdOrKeyword()
     Token res;
     while(forward->isLetterOrNumber() || forward->isSymbol()) ++forward;
     if (std::binary_search(keywords.begin(), keywords.end(), makeString(it, forward)))
-        res.stype = ShortType::keyword;
+        res.stype = ShortTokType::keyword;
     else
-        res.stype = ShortType::id;
+        res.stype = ShortTokType::id;
     return res;
 }
 
@@ -56,7 +56,7 @@ Token LexerC::scanMacro()
 {
     Token res;
     while(forward->isLetter()) ++forward;
-    res.stype = ShortType::macro;
+    res.stype = ShortTokType::macro;
     return res;
 }
 
@@ -67,7 +67,7 @@ Token LexerC::scanString()
         ++forward; // todo: add special symbols
 
     ++forward;
-    res.stype = ShortType::stringLiter;
+    res.stype = ShortTokType::stringLiter;
     return res;
 }
 
@@ -87,7 +87,7 @@ Token LexerC::scan()
     else if (*it == '"')
         scanningToken = scanString();
     else
-        scanningToken.stype = ShortType::unknown;
+        scanningToken.stype = ShortTokType::unknown;
 
     scanningToken.posStartOfWord = it - begin;
     scanningToken.posEndOfWord   = forward - begin;
