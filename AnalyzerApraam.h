@@ -9,6 +9,7 @@ public:
     AnalyzerApraam();
     AnalyzerApraam(Logger*);
     Token getAnalysedToken() override;
+    void holdCompleterModel(QAbstractItemModel*);
 };
 
 #endif // ANALYZERAPRAAM_H

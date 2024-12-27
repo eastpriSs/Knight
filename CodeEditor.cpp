@@ -121,10 +121,16 @@ void CodeEditor::languageChanged(QListWidget* list)
 {
     logger.hide();
     if (list->currentItem()->text() == "C")  {
-        highlighter.switchAnalyzer(new AnalyzerC(dynamic_cast<QStringListModel*>(compltr->model())));
+        AnalyzerC* a = new AnalyzerC();
+        a->holdCompleterModel(compltr->model());
+        highlighter.switchAnalyzer(a);
+
     } else if (list->currentItem()->text() == "Apraam Simcode") {
         logger.show();
-        highlighter.switchAnalyzer(new AnalyzerApraam(&logger));
+        AnalyzerApraam* a = new AnalyzerApraam(&logger);
+        a->holdCompleterModel(compltr->model());
+        highlighter.switchAnalyzer(a);
+
     } else {
         highlighter.switchAnalyzer(new Analyzer());
     }
@@ -187,7 +193,6 @@ void CodeEditor::keyPressEventInEditMode(QKeyEvent *event)
         case Qt::Key_Down:
         case Qt::Key_PageUp:
         case Qt::Key_PageDown:
-            compltr->popup()->hide();
             event->ignore();
             return;
         }

@@ -1,13 +1,17 @@
 #include "AnalyzerC.h"
 #include "LexerC.h"
 
-AnalyzerC::AnalyzerC(QStringListModel* cmodel)
+AnalyzerC::AnalyzerC()
     : Analyzer()
 {
     lex = new LexerC();
-    lex->fillCompleterModel(cmodel);
 }
 
+void AnalyzerC::holdCompleterModel(QAbstractItemModel* m)
+{
+    completerModel = dynamic_cast<QStringListModel*>(m);
+    lex->fillCompleterModel(completerModel);
+}
 
 Token AnalyzerC::getAnalysedToken()
 {

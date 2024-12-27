@@ -16,6 +16,12 @@ AnalyzerApraam::AnalyzerApraam(Logger* l)
     pars = new ApraamTranslatorParser(lex, l);
 }
 
+void AnalyzerApraam::holdCompleterModel(QAbstractItemModel* m)
+{
+    completerModel = dynamic_cast<QStringListModel*>(m);
+    lex->fillCompleterModel(completerModel);
+}
+
 Token AnalyzerApraam::getAnalysedToken()
 {
     return pars->parse();
