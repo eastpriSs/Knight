@@ -92,8 +92,10 @@ Token LexerC::scan()
     scanningToken.posStartOfWord = it - begin;
     scanningToken.posEndOfWord   = forward - begin;
 
+    #ifdef TESTMODE
     qDebug() << "LexerC::scan() messeage:";
     qDebug() << makeString(it, forward) << ", type=" << static_cast<int>(scanningToken.stype);
+    #endif
 
     it = forward;
     forward = it + 1;

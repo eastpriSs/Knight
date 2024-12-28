@@ -1,7 +1,6 @@
 #include <QPainter>
 #include <QTextBlock>
 #include <QFileDialog>
-#include <QLabel>
 
 #include "MainWindow.h"
 #include "ui_MainWindow.h"

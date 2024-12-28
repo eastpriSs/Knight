@@ -49,6 +49,7 @@ private :
     void openSwitchingLanguageMenu();
     void updateCompleterPrefix();
     void setTabsSize(const int&) noexcept;
+    void increaseCharsSize() noexcept;
     QString textUnderCursor() const;
 
 private:
@@ -58,11 +59,13 @@ private:
     ListLogger        logger = ListLogger(this);
     QColor            currentLineColor;
     QColor            currentLineSymbolColor;
+    QFont             charFont = QFont();
     QWidget*          lineNumberArea = nullptr;
     LanguageList*     langList = nullptr;
     QCompleter*       compltr = nullptr;
-    codeEditorMode    mode;
-    int               tabsSize;
+    codeEditorMode    mode = codeEditorMode::fullEditMode;;
+    int               tabsSize = 4;
+    int               charsSize = 10;
     bool              highlightEnabled;
     const QStringList supportedLanguages = {"Apraam Simcode", "C", "Native"};
 };

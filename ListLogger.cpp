@@ -1,5 +1,4 @@
 #include "ListLogger.h"
-#include <QToolTip>
 
 ListLogger::ListLogger(QWidget* parent)
 {

@@ -40,7 +40,6 @@ void SettingMenuSendAction::on_confirm_clicked()
 {
     QFile compilerSettingFile("compiler.cfg");
     compilerSettingFile.open(QIODevice::WriteOnly);
-    qDebug() << "Creating Setting file :" << compilerSettingFile.fileName();
 
     QTextStream out(&compilerSettingFile);
     QString outputCommand = ui->compilerName->text() + ' '

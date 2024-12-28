@@ -1,7 +1,6 @@
 #include "CodeEditor.h"
 #include <QPainter>
 #include <QTextBlock>
-#include <QFontMetrics>
 #include <QToolTip>
 #include <QScrollBar>
 #include <QStringListModel>
@@ -13,8 +12,6 @@
 CodeEditor::CodeEditor(QWidget *parent) : QPlainTextEdit(parent)
 {
     lineNumberArea = new LineNumberArea(this);
-    langList = nullptr;
-    mode = codeEditorMode::fullEditMode;
     setUpCompleter(new QCompleter(this));
 
     connect(this, &CodeEditor::blockCountChanged, this, &CodeEditor::updateLineNumberAreaWidth);
@@ -24,8 +21,7 @@ CodeEditor::CodeEditor(QWidget *parent) : QPlainTextEdit(parent)
 
     updateLineNumberAreaWidth();
     changeToLightTheme();
-    QFont charFont = QFont();
-    charFont.setPointSize(10); // magic const BIG TODO
+    charFont.setPointSize(charsSize);
     setFont(charFont);
     setTabsSize(4);
 }
@@ -80,6 +76,12 @@ void CodeEditor::setTabsSize(const int& size) noexcept
 {
     tabsSize = size;
     setTabStopDistance(QFontMetrics(QFont()).horizontalAdvance(' ') * size * 2);
+}
+
+void CodeEditor::increaseCharsSize() noexcept
+{
+    charFont.setPointSize(++charsSize);
+    setFont(charFont);
 }
 
 int CodeEditor::lineNumberAreaWidth()
@@ -166,16 +168,21 @@ void CodeEditor::keyPressEventInCommandMode(QKeyEvent *event)
         break;
     case Qt::Key_L:
         openSwitchingLanguageMenu();
+    case Qt::Key_I:
+        increaseCharsSize();
     }
 }
 
 
 void CodeEditor::updateCompleterPrefix() {
     QString prefix = textUnderCursor();
+    QPoint cursorPosRect = cursorRect().bottomRight();
+    QSize rectSz = QSize(100,5);
+    QPoint rectPos = QPoint(cursorPosRect.x() + rectSz.width(), cursorPosRect.y());
+    QRect rect = QRect(rectPos,rectSz);
     if (!prefix.isEmpty()) {
-        qDebug() << textUnderCursor();
         compltr->setCompletionPrefix(prefix);
-        compltr->complete();
+        compltr->complete(rect);
     }
     else {
         compltr->popup()->hide();
@@ -203,7 +210,10 @@ void CodeEditor::keyPressEventInEditMode(QKeyEvent *event)
         else
             changeModeToCommandInput();
     }
-    if (event->key() == Qt::Key_Enter || event->key() == Qt::Key_Return) {
+
+    if (event->key() == Qt::Key_Enter
+        || event->key() == Qt::Key_Return
+        || event->key() == Qt::Key_Tab) {
         if (compltr) {
             if (compltr->popup()->isVisible()) {
                 compltr->popup()->hide();

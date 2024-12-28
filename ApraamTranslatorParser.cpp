@@ -1,6 +1,6 @@
 #include "ApraamTranslatorParser.h"
-#include <QDebug>
 #include <QHash>
+
 
 inline const QHash<ApraamTokType, QString> tokenStrEquivalent =
 {
@@ -108,7 +108,9 @@ void ApraamTranslatorParser::generateProductsForLogicExpression()
 
 void ApraamTranslatorParser::generateProducts()
 {
+    #ifdef TESTMODE
     qDebug() << "Generating for " << (int)std::get<ApraamTokType>(currTkn.ttype);
+    #endif
     switch (std::get<ApraamTokType>(currTkn.ttype)) {
 
     // Definitions
@@ -203,7 +205,9 @@ void ApraamTranslatorParser::checkTop()
         products.pop();
 
 
+    #ifdef TESTMODE
     qDebug() << "SyntaxError:" << currTkn.syntaxError << "type:" << (int)currTknType;
+    #endif
 }
 
 Token ApraamTranslatorParser::parse()

@@ -1,5 +1,4 @@
 #include "ApraamTranslatorLexer.h"
-#include <QDebug>
 
 QHash<QString, ApraamTranslatorLexer::TokenType> ApraamTranslatorLexer::table =
 {
@@ -205,8 +204,10 @@ Token ApraamTranslatorLexer::scan()
     scanningToken.posStartOfWord = it - begin;
     scanningToken.posEndOfWord   = forward - begin;
 
+    #ifdef TESTMODE
     qDebug() << "ApraamTranslatorLexer::scan() messeage:";
     qDebug() << makeString(it, forward) << ", type=" << static_cast<int>(std::get<ApraamTokType>(scanningToken.ttype));
+    #endif
 
     it = forward;
     forward = it + 1;

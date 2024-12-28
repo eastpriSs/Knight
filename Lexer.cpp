@@ -1,5 +1,4 @@
 #include "Lexer.h"
-#include <QDebug>
 
 Lexer::Lexer(const QString& block)
 {
