@@ -12,12 +12,14 @@ protected:
     QString::ConstIterator begin;
     QString::ConstIterator it;
     QString::ConstIterator forward;
+    QStringListModel* completerModel;
 
 public:
     Lexer() = default;
     Lexer(const QString&);
     void setScanningBlock(const QString&);
     void fillCompleterModel(QStringListModel*);
+    void holdCompleterModel(QStringListModel*);
     virtual void addKeyword(QString&&);
     virtual Token scan();
     virtual ~Lexer() = default;

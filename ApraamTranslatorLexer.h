@@ -9,7 +9,7 @@ class ApraamTranslatorLexer final : public Lexer
 {
 private:
     typedef ApraamTokType TokenType;
-    static QHash<QString, TokenType> table;
+    const static QHash<QString, TokenType> table;
 
     void skipWhiteSpaces();
     [[nodiscard]]

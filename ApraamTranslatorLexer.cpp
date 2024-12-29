@@ -1,6 +1,6 @@
 #include "ApraamTranslatorLexer.h"
 
-QHash<QString, ApraamTranslatorLexer::TokenType> ApraamTranslatorLexer::table =
+const QHash<QString, ApraamTranslatorLexer::TokenType> ApraamTranslatorLexer::table =
 {
     {"push", TokenType::PUSH},
     {"pop", TokenType::POP},

@@ -22,6 +22,7 @@ SyntaxHiglighter::SyntaxHiglighter(QTextDocument *parent)
 
     // Colors
     turnOnLightTheme();
+    stringLiterHighlightingRule.setForeground(Qt::darkGreen);
 }
 
 void SyntaxHiglighter::turnOnDarkTheme()
@@ -55,7 +56,6 @@ void SyntaxHiglighter::highlightBlock(const QString& text)
     analyzer->setScanningBlock(text);
     while((token = analyzer->getAnalysedToken()), token.stype != ShortTokType::eof)
     {
-        qDebug() << 1;
         switch (token.stype)
         {
         case ShortTokType::id:

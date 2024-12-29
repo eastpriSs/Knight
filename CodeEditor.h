@@ -50,6 +50,7 @@ private :
     void updateCompleterPrefix();
     void setTabsSize(const int&) noexcept;
     void increaseCharsSize() noexcept;
+    void reduceCharsSize() noexcept;
     QString textUnderCursor() const;
 
 private:

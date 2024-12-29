@@ -38,7 +38,7 @@ void CodeEditor::setUpCompleter(QCompleter *completer)
 
     compltr->setModel(new QStringListModel({"someone"}));
     compltr->setModelSorting(QCompleter::CaseInsensitivelySortedModel);
-    compltr->setCaseSensitivity(Qt::CaseInsensitive);
+    compltr->setCaseSensitivity(Qt::CaseSensitive);
     compltr->setWrapAround(false);
     compltr->setWidget(this);
     compltr->setCompletionMode(QCompleter::PopupCompletion);
@@ -81,6 +81,12 @@ void CodeEditor::setTabsSize(const int& size) noexcept
 void CodeEditor::increaseCharsSize() noexcept
 {
     charFont.setPointSize(++charsSize);
+    setFont(charFont);
+}
+
+void CodeEditor::reduceCharsSize() noexcept
+{
+    charFont.setPointSize(--charsSize);
     setFont(charFont);
 }
 
@@ -168,14 +174,21 @@ void CodeEditor::keyPressEventInCommandMode(QKeyEvent *event)
         break;
     case Qt::Key_L:
         openSwitchingLanguageMenu();
+        break;
     case Qt::Key_I:
         increaseCharsSize();
+        break;
+    case Qt::Key_R:
+        reduceCharsSize();
+        break;
     }
 }
 
 
 void CodeEditor::updateCompleterPrefix() {
-    QString prefix = textUnderCursor();
+    QTextCursor cursor = textCursor();
+    cursor.select(QTextCursor::WordUnderCursor);
+    QString prefix = cursor.selectedText();
     QPoint cursorPosRect = cursorRect().bottomRight();
     QSize rectSz = QSize(100,5);
     QPoint rectPos = QPoint(cursorPosRect.x() + rectSz.width(), cursorPosRect.y());

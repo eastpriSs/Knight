@@ -18,7 +18,7 @@ enum class ApraamTokType {
     eof
 };
 
-enum class ClanTokType{};
+enum class ClanTokType{ INT, FLOAT, DOUBLE, AUTO, CHAR, SHORT, VOID};
 
 class Token
 {

@@ -1,7 +1,9 @@
 #include "LexerC.h"
 
+#define TESTMODE
+
 LexerC::LexerC()
-    : Lexer("")
+    : Lexer()
 {
     keywords.append({
     "_Alignas", "_Alignof", "_Atomic",
@@ -45,10 +47,13 @@ Token LexerC::scanIdOrKeyword()
 {
     Token res;
     while(forward->isLetterOrNumber() || forward->isSymbol()) ++forward;
-    if (std::binary_search(keywords.begin(), keywords.end(), makeString(it, forward)))
+
+    QString lexem = makeString(it, forward);
+    if (std::binary_search(keywords.begin(), keywords.end(), lexem))
         res.stype = ShortTokType::keyword;
     else
         res.stype = ShortTokType::id;
+
     return res;
 }
 
@@ -71,9 +76,24 @@ Token LexerC::scanString()
     return res;
 }
 
+void LexerC::tryAddLastLexemToCompleter()
+{
+    QStringList model = completerModel->stringList();
+    if (!std::binary_search(model.constBegin(), model.constEnd(), lastLexem)){
+        model.insert(std::upper_bound(model.constBegin(), model.constEnd(), lastLexem), lastLexem);
+        completerModel->setStringList(model);
+    }
+}
+
 Token LexerC::scan()
 {
     Token scanningToken;
+
+    if (it->isSpace()){
+        tryAddLastLexemToCompleter();
+        ++it;
+    }
+
     skipWhiteSpaces();
 
     if (it->isNull())
@@ -91,6 +111,8 @@ Token LexerC::scan()
 
     scanningToken.posStartOfWord = it - begin;
     scanningToken.posEndOfWord   = forward - begin;
+
+    lastLexem = makeString(it,forward);
 
     #ifdef TESTMODE
     qDebug() << "LexerC::scan() messeage:";
