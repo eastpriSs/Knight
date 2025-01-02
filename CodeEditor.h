@@ -5,11 +5,21 @@
 #include <QObject>
 #include <QListWidget>
 #include <QCompleter>
+#include <QVBoxLayout>
 
+#include "CommandInfoList.h"
 #include "SyntaxHighlighter.h"
 #include "LanguageList.h"
 #include "ListLogger.h"
 
+
+namespace TextAlgorithm
+{
+
+QList<QPoint> quickSearch(const QString&, const QString&);
+QList<QPoint> regularSearch(const QString&, const QRegularExpression&);
+
+};
 
 class CodeEditor : public QPlainTextEdit
 {
@@ -27,7 +37,6 @@ public:
     void changeToLightTheme();
     void turnOnCurrentLineHighlighter();
     void turnOffCurrentLineHighlighter();
-    void setUpCompleter(QCompleter*);
 
 protected:
     void resizeEvent(QResizeEvent*) override;
@@ -52,6 +61,10 @@ private :
     void increaseCharsSize() noexcept;
     void reduceCharsSize() noexcept;
     QString textUnderCursor() const;
+    void setUpCompleter(QCompleter*);
+    void setUpCommandInfoList();
+    void quickSearch();
+    void reSearch();
 
 private:
     enum codeEditorMode {commandMode, fullEditMode};
@@ -64,6 +77,8 @@ private:
     QWidget*          lineNumberArea = nullptr;
     LanguageList*     langList = nullptr;
     QCompleter*       compltr = nullptr;
+    CommandInfoList   commandInfoList = CommandInfoList(this);
+    QVBoxLayout       toplayout = QVBoxLayout(this);
     codeEditorMode    mode = codeEditorMode::fullEditMode;;
     int               tabsSize = 4;
     int               charsSize = 10;

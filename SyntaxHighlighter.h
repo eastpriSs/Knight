@@ -11,7 +11,7 @@ class SyntaxHiglighter final : public QSyntaxHighlighter
 public:
     SyntaxHiglighter(QTextDocument *parent = 0);
     void switchAnalyzer(Analyzer*);
-
+    void highlightString(const int&, const int&);
     void turnOnDarkTheme();
     void turnOnLightTheme();
 private:
@@ -25,6 +25,7 @@ private:
     QTextCharFormat stringLiterHighlightingRule;
     QTextCharFormat operatorHighlightingRule;
     QTextCharFormat errorHighlightingRule;
+    QTextCharFormat foundStringHighlightingRule;
     Analyzer *analyzer;
 };
 

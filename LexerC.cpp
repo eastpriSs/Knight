@@ -110,7 +110,7 @@ Token LexerC::scan()
         scanningToken.stype = ShortTokType::unknown;
 
     scanningToken.posStartOfWord = it - begin;
-    scanningToken.posEndOfWord   = forward - begin;
+    scanningToken.lengthOfWord   = forward - begin;
 
     lastLexem = makeString(it,forward);
 

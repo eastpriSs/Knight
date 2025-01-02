@@ -15,6 +15,7 @@ SOURCES += \
     ApraamTranslatorLexer.cpp \
     ApraamTranslatorParser.cpp \
     CodeEditor.cpp \
+    CommandInfoList.cpp \
     ConsoleOutput.cpp \
     LanguageList.cpp \
     Lexer.cpp \
@@ -36,6 +37,7 @@ HEADERS += \
     ApraamTranslatorLexer.h \
     ApraamTranslatorParser.h \
     CodeEditor.h \
+    CommandInfoList.h \
     ConsoleOutput.h \
     LanguageList.h \
     Lexer.h \

@@ -202,7 +202,7 @@ Token ApraamTranslatorLexer::scan()
         scanningToken = scanOperand();
 
     scanningToken.posStartOfWord = it - begin;
-    scanningToken.posEndOfWord   = forward - begin;
+    scanningToken.lengthOfWord   = forward - begin;
 
     #ifdef TESTMODE
     qDebug() << "ApraamTranslatorLexer::scan() messeage:";

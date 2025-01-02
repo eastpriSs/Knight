@@ -4,6 +4,7 @@
 #include <QToolTip>
 #include <QScrollBar>
 #include <QStringListModel>
+#include <QInputDialog>
 
 #include "LanguageList.h"
 #include "AnalyzerC.h"
@@ -13,6 +14,7 @@ CodeEditor::CodeEditor(QWidget *parent) : QPlainTextEdit(parent)
 {
     lineNumberArea = new LineNumberArea(this);
     setUpCompleter(new QCompleter(this));
+    setUpCommandInfoList();
 
     connect(this, &CodeEditor::blockCountChanged, this, &CodeEditor::updateLineNumberAreaWidth);
     connect(this, &CodeEditor::updateRequest, this, &CodeEditor::updateLineNumberArea);
@@ -44,6 +46,41 @@ void CodeEditor::setUpCompleter(QCompleter *completer)
     compltr->setCompletionMode(QCompleter::PopupCompletion);
     connect(compltr, QOverload<const QString &>::of(&QCompleter::activated),
                      this, &CodeEditor::insertCompletion);
+}
+
+void CodeEditor::setUpCommandInfoList()
+{
+    commandInfoList.hide();
+    toplayout.addWidget(&commandInfoList);
+    toplayout.setAlignment(&commandInfoList, Qt::AlignTop | Qt::AlignRight);
+    setLayout(&toplayout);
+}
+
+void CodeEditor::quickSearch()
+{
+    bool ok = false;
+    QString input = QInputDialog::getText(nullptr, "БМП-алгоритм", "Введите подстроку:", QLineEdit::Normal, "", &ok);
+
+    if (!ok)
+        return;
+
+    QList<QPoint> foundStringsPositions = TextAlgorithm::quickSearch(toPlainText(),input);
+    foreach (const QPoint& i, foundStringsPositions)
+        highlighter.highlightString(i.x(), i.y() - i.x() + 1);
+
+}
+
+void CodeEditor::reSearch()
+{
+    bool ok = false;
+    QString input = QInputDialog::getText(nullptr, "Регулярные выражения", "Введите выражение:", QLineEdit::Normal, "", &ok);
+
+    if (!ok)
+        return;
+
+    QList<QPoint> foundStringsPositions = TextAlgorithm::regularSearch(toPlainText(), QRegularExpression(input));
+    foreach (const QPoint& i, foundStringsPositions)
+        highlighter.highlightString(i.x(), i.y());
 }
 
 void CodeEditor::insertCompletion(const QString &completion)
@@ -114,14 +151,14 @@ void CodeEditor::updateLineNumberArea(const QRect &rect, int dy)
 void CodeEditor::changeModeToCommandInput()
 {
     mode = codeEditorMode::commandMode;
-    setFixedHeight(height() - 100);
+    commandInfoList.show();
     setReadOnly(true);
 }
 
 void CodeEditor::changeModeToFullEdit()
 {
     mode = codeEditorMode::fullEditMode;
-    setFixedHeight(height() + 100);
+    commandInfoList.hide();
     setReadOnly(false);
 }
 
@@ -181,6 +218,13 @@ void CodeEditor::keyPressEventInCommandMode(QKeyEvent *event)
     case Qt::Key_R:
         reduceCharsSize();
         break;
+    case Qt::Key_Q:
+        quickSearch();
+        break;
+    case Qt::Key_E:
+        reSearch();
+        break;
+
     }
 }
 
@@ -218,10 +262,7 @@ void CodeEditor::keyPressEventInEditMode(QKeyEvent *event)
         }
     }
     else if (event->key() == Qt::Key_Escape) {
-        if (mode == commandMode)
-            changeModeToFullEdit();
-        else
-            changeModeToCommandInput();
+        changeModeToCommandInput();
     }
 
     if (event->key() == Qt::Key_Enter
@@ -326,4 +367,57 @@ void CodeEditor::turnOffCurrentLineHighlighter()
 {
     highlightEnabled = false;
     highlightCurrentLine();
+}
+
+QList<QPoint> TextAlgorithm::quickSearch(const QString & text, const QString & str)
+{
+    QList<QPoint> result;
+    QMap<QChar, int> shiftTable;
+    qsizetype len = str.length();
+    qsizetype textLen = text.length();
+
+    for (int i = len - 2; i >= 0; --i) {
+        if (shiftTable.find(str[i]) == shiftTable.end())
+            shiftTable.insert(str[i], len - i - 1);
+    }
+    if (shiftTable.find(str[len - 1]) == shiftTable.end())
+        shiftTable.insert(str[len - 1], len);
+
+    int i = len - 1;
+    int j, k;
+    do {
+        k = i;
+        j = len - 1;
+
+        while ((j >= 0) && (text[k] == str[j])) {
+            --k;
+            --j;
+        }
+        if (j < 0) {
+            result += QPoint(k + 1, k + len);
+            i += len - 1;
+            continue;
+        }
+
+        if (shiftTable.find(str[j]) == shiftTable.end())
+            i += len - 1;
+        else
+            i += shiftTable[str[j]] - 1;
+
+    } while (i < textLen);
+
+    return result;
+}
+
+QList<QPoint> TextAlgorithm::regularSearch(const QString & text, const QRegularExpression & re)
+{
+    QList<QPoint> result;
+    int s = 0,l = 0;
+    for (const QRegularExpressionMatch &match : re.globalMatch(text)) {
+        s = match.capturedStart();
+        l = match.capturedLength();
+        if (s == -1) break;
+        result += QPoint(s,l);
+    }
+    return result;
 }
