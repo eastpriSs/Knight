@@ -1,6 +1,5 @@
 #include "LexerC.h"
 
-#define TESTMODE
 
 LexerC::LexerC()
     : Lexer()
@@ -89,10 +88,11 @@ Token LexerC::scan()
 {
     Token scanningToken;
 
-    if (it->isSpace()){
+    if (!it->isLetter()
+        && !it->isNull()
+        && (lastLexemType == ShortTokType::id)
+        && (lastLexem.length() > 4))
         tryAddLastLexemToCompleter();
-        ++it;
-    }
 
     skipWhiteSpaces();
 
@@ -113,6 +113,7 @@ Token LexerC::scan()
     scanningToken.lengthOfWord   = forward - begin;
 
     lastLexem = makeString(it,forward);
+    lastLexemType = scanningToken.stype;
 
     #ifdef TESTMODE
     qDebug() << "LexerC::scan() messeage:";
