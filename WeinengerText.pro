@@ -25,6 +25,7 @@ SOURCES += \
     MainWindow.cpp \
     MenuBarLogger.cpp \
     Parser.cpp \
+    ReplaceDialog.cpp \
     SettingMenuSendAction.cpp \
     SyntaxHighlighter.cpp \
     Token.cpp \
@@ -47,6 +48,7 @@ HEADERS += \
     MainWindow.h \
     MenuBarLogger.h \
     Parser.h \
+    ReplaceDialog.h \
     SettingMenuSendAction.h \
     SyntaxHighlighter.h \
     Token.h
@@ -54,6 +56,7 @@ HEADERS += \
 FORMS += \
     ConsoleOutput.ui \
     MainWindow.ui \
+    ReplaceDialog.ui \
     SettingMenuSendAction.ui
 
 # Default rules for deployment.

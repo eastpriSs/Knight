@@ -8,6 +8,8 @@ const QStringList CommandInfoList::infoLabels =
     "[ R ] - Уменьшить размер шрифта.",
     "[ Q ] - Быстрый поиск подстроки.",
     "[ E ] - RE поиск.",
+    "[ H ] - Замена подстроки.",
+    "[ J ] - RE замена.",
 };
 
 CommandInfoList::CommandInfoList(QWidget* parent)

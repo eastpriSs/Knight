@@ -65,6 +65,8 @@ private :
     void setUpCommandInfoList();
     void quickSearch();
     void reSearch();
+    void quickReplace();
+    void reReplace();
 
 private:
     enum codeEditorMode {commandMode, fullEditMode};

@@ -6,6 +6,7 @@
 #include <QStringListModel>
 #include <QInputDialog>
 
+#include "ReplaceDialog.h"
 #include "LanguageList.h"
 #include "AnalyzerC.h"
 #include "AnalyzerApraam.h"
@@ -81,6 +82,43 @@ void CodeEditor::reSearch()
     QList<QPoint> foundStringsPositions = TextAlgorithm::regularSearch(toPlainText(), QRegularExpression(input));
     foreach (const QPoint& i, foundStringsPositions)
         highlighter.highlightString(i.x(), i.y());
+}
+
+void CodeEditor::quickReplace()
+{
+    ReplaceDialog dialog("Замена подстроки");
+
+    if (dialog.exec() == QDialog::Accepted) {
+        QString text = toPlainText();
+        QString replacement = dialog.getReplacement();
+        QString goal = dialog.getGoal();
+        if (goal.isEmpty()) return;
+
+        QList<QPoint> foundStringsPositions = TextAlgorithm::quickSearch(text, goal);
+        for (QList<QPoint>::const_reverse_iterator i = foundStringsPositions.crbegin(); i != foundStringsPositions.crend(); ++i) {
+            int start = i->x();
+            text.replace(start, i->y() - start + 1, replacement);
+        }
+        setPlainText(text);
+    }
+}
+
+void CodeEditor::reReplace()
+{
+    ReplaceDialog dialog("Замена с помощью регулярных выражений");
+
+    if (dialog.exec() == QDialog::Accepted) {
+        QString text = toPlainText();
+        QString replacement = dialog.getReplacement();
+        QString expr = dialog.getGoal();
+        if (expr.isEmpty()) return;
+
+        QList<QPoint> foundStringsPositions = TextAlgorithm::regularSearch(toPlainText(), QRegularExpression(expr));
+        for (QList<QPoint>::const_reverse_iterator i = foundStringsPositions.crbegin(); i != foundStringsPositions.crend(); ++i)
+            text.replace(i->x(), i->y(), replacement);
+
+        setPlainText(text);
+    }
 }
 
 void CodeEditor::insertCompletion(const QString &completion)
@@ -224,7 +262,12 @@ void CodeEditor::keyPressEventInCommandMode(QKeyEvent *event)
     case Qt::Key_E:
         reSearch();
         break;
-
+    case Qt::Key_H:
+        quickReplace();
+        break;
+    case Qt::Key_J:
+        reReplace();
+        break;
     }
 }
 
