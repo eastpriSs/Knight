@@ -1,13 +1,22 @@
 #include "Lexer.h"
-#include <QDebug>
 
 Lexer::Lexer(const QString& block)
 {
     begin = block.begin();
     it = begin;
     forward = it + 1;
+    completerModel = nullptr;
 }
 
+void Lexer::fillCompleterModel(QStringListModel* m)
+{
+    m->setStringList(keywords);
+}
+
+void Lexer::holdCompleterModel(QStringListModel *m)
+{
+    completerModel = m;
+}
 
 void Lexer::setScanningBlock(const QString& b)
 {
@@ -23,6 +32,5 @@ void Lexer::addKeyword(QString&& kw)
 
 Token Lexer::scan()
 {
-    // todo highlighting nums
     return Token();
 }

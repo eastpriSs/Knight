@@ -1,6 +1,6 @@
 #include "ApraamTranslatorParser.h"
-#include <QDebug>
 #include <QHash>
+
 
 inline const QHash<ApraamTokType, QString> tokenStrEquivalent =
 {
@@ -108,8 +108,10 @@ void ApraamTranslatorParser::generateProductsForLogicExpression()
 
 void ApraamTranslatorParser::generateProducts()
 {
-    qDebug() << "Generating for " << (int)currTkn.ttype;
-    switch (currTkn.ttype) {
+    #ifdef TESTMODE
+    qDebug() << "Generating for " << (int)std::get<ApraamTokType>(currTkn.ttype);
+    #endif
+    switch (std::get<ApraamTokType>(currTkn.ttype)) {
 
     // Definitions
     case ApraamTokType::VAR:
@@ -183,15 +185,16 @@ void ApraamTranslatorParser::generateProducts()
 
 void ApraamTranslatorParser::checkTop()
 {
-    while (currTkn.ttype != products.top())
+    const ApraamTokType& currTknType = std::get<ApraamTokType>(currTkn.ttype);
+    while (currTknType != products.top())
     {
-        qDebug() << '(' << (int)currTkn.ttype << ',' << (int)products.top() << ')';
+        qDebug() << '(' << (int)currTknType << ',' << (int)products.top() << ')';
         if (products.top() == ApraamTokType::startSymbol || products.top() == ApraamTokType::blockSymbol)
             break;
         expected += products.pop();
     }
 
-    if (currTkn.ttype != products.top()) {
+    if (currTknType != products.top()) {
         currTkn.syntaxError = true;
     } else {
         while (products.top() != ApraamTokType::startSymbol && products.top() != ApraamTokType::blockSymbol)
@@ -202,7 +205,9 @@ void ApraamTranslatorParser::checkTop()
         products.pop();
 
 
-    qDebug() << "SyntaxError:" << currTkn.syntaxError << "type:" << (int)currTkn.ttype;
+    #ifdef TESTMODE
+    qDebug() << "SyntaxError:" << currTkn.syntaxError << "type:" << (int)currTknType;
+    #endif
 }
 
 Token ApraamTranslatorParser::parse()
@@ -214,6 +219,6 @@ Token ApraamTranslatorParser::parse()
     else
         checkTop();
 
-    logger->write(makeInfoMessage(expected, currTkn.ttype));
+    logger->write(makeInfoMessage(expected, std::get<ApraamTokType>(currTkn.ttype)));
     return currTkn;
 }

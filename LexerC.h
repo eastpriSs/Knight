@@ -2,12 +2,15 @@
 #define LEXERC_H
 
 #include "Lexer.h"
-#include <QDebug>
+#include <QStringListModel>
+#include <QHash>
 
 class LexerC final : public Lexer
 {
 private:
+    QString lastLexem = {};
 
+private:
     void skipWhiteSpaces();
     [[nodiscard]]
     Token scanNumber();
@@ -17,6 +20,8 @@ private:
     Token scanMacro();
     [[nodiscard]]
     Token scanString();
+
+    void tryAddLastLexemToCompleter();
 
 public:
     LexerC();

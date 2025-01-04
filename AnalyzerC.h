@@ -5,9 +5,12 @@
 
 class AnalyzerC final : public Analyzer
 {
+private:
+    QStringListModel* completerModel;
 public:
     AnalyzerC();
     Token getAnalysedToken() override;
+    void holdCompleterModel(QAbstractItemModel*);
 };
 
 #endif // ANALYZERC_H

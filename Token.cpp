@@ -1,11 +1,13 @@
 #include "Token.h"
 
-Token::Token(ApraamTokType t, ShortType st)
-    : stype(st), ttype(t)
-{}
-
-Token::Token(ShortType t)
-    : stype(t)
+Token::Token(ApraamTokType t, ShortTokType st)
 {
+    ttype = t;
+    stype = st;
+}
+
+Token::Token(ShortTokType t)
+{
+    stype = t;
 }
 

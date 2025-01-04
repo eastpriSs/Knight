@@ -2,6 +2,7 @@
 #define LEXER_H
 
 #include <QStringList>
+#include <QStringListModel>
 #include "Token.h"
 
 class Lexer
@@ -11,11 +12,14 @@ protected:
     QString::ConstIterator begin;
     QString::ConstIterator it;
     QString::ConstIterator forward;
+    QStringListModel* completerModel;
 
 public:
-    Lexer() = delete;
+    Lexer() = default;
     Lexer(const QString&);
     void setScanningBlock(const QString&);
+    void fillCompleterModel(QStringListModel*);
+    void holdCompleterModel(QStringListModel*);
     virtual void addKeyword(QString&&);
     virtual Token scan();
     virtual ~Lexer() = default;

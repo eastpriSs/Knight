@@ -5,6 +5,7 @@
 #include "Lexer.h"
 #include "Parser.h"
 #include "Logger.h"
+#include <QStringListModel>
 
 class Analyzer
 {
@@ -12,6 +13,7 @@ protected:
     Lexer *lex;
     Parser *pars;
     Logger *logger;
+    QStringListModel* completerModel;
 
 public:
     Analyzer();

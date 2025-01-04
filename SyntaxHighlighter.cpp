@@ -22,6 +22,7 @@ SyntaxHiglighter::SyntaxHiglighter(QTextDocument *parent)
 
     // Colors
     turnOnLightTheme();
+    stringLiterHighlightingRule.setForeground(Qt::darkGreen);
 }
 
 void SyntaxHiglighter::turnOnDarkTheme()
@@ -53,29 +54,29 @@ void SyntaxHiglighter::highlightBlock(const QString& text)
 {
     Token token;
     analyzer->setScanningBlock(text);
-    while((token = analyzer->getAnalysedToken()), token.stype != ShortType::eof)
+    while((token = analyzer->getAnalysedToken()), token.stype != ShortTokType::eof)
     {
         switch (token.stype)
         {
-        case ShortType::id:
+        case ShortTokType::id:
             setFormat(token.posStartOfWord, token.posEndOfWord, idHighlightingRule);
             break;
-        case ShortType::num:
+        case ShortTokType::num:
             setFormat(token.posStartOfWord, token.posEndOfWord, numHighlightingRule);
             break;
-        case ShortType::keyword:
+        case ShortTokType::keyword:
             setFormat(token.posStartOfWord, token.posEndOfWord, keywordHighlightingRule);
             break;
-        case ShortType::macro:
+        case ShortTokType::macro:
             setFormat(token.posStartOfWord, token.posEndOfWord, macroHighlightingRule);
             break;
-        case ShortType::stringLiter:
+        case ShortTokType::stringLiter:
             setFormat(token.posStartOfWord, token.posEndOfWord, stringLiterHighlightingRule);
             break;
-        case ShortType::_operator:
+        case ShortTokType::_operator:
             setFormat(token.posStartOfWord, token.posEndOfWord, operatorHighlightingRule);
             break;
-        case ShortType::unknown:
+        case ShortTokType::unknown:
             setFormat(token.posStartOfWord, token.posEndOfWord, QTextCharFormat());
             break;
 

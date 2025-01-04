@@ -1,10 +1,15 @@
 #include "ListLogger.h"
-#include <QToolTip>
 
 ListLogger::ListLogger(QWidget* parent)
 {
     list.setParent(parent);
     list.setGeometry(500, 300, 400, 200);
+    list.hide();
+}
+ListLogger::ListLogger(QWidget* parent, int ax,int ay,int x,int y)
+{
+    list.setParent(parent);
+    list.setGeometry(ax, ay, x, y);
     list.hide();
 }
 

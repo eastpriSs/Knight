@@ -2,13 +2,13 @@
 
 Analyzer::Analyzer()
 {
-    lex = new Lexer("");
+    lex = new Lexer();
     pars = new Parser(lex);
 }
 
 Analyzer::Analyzer(Logger* l)
 {
-    lex = new Lexer("");
+    lex = new Lexer();
     pars = new Parser(lex);
     logger = l;
 }

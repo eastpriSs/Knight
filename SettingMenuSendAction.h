@@ -17,7 +17,7 @@ class SettingMenuSendAction : public QDialog
 
 public:
     explicit SettingMenuSendAction(QWidget *parent = nullptr);
-    explicit SettingMenuSendAction(const QString&, QWidget *parent = nullptr);
+    SettingMenuSendAction(const QString&, QWidget *parent = nullptr);
     ~SettingMenuSendAction();
 
 private slots:
