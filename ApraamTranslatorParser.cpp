@@ -93,6 +93,7 @@ void ApraamTranslatorParser::generateAdditOperatorProduct()
 
 void ApraamTranslatorParser::generateProductsForLogicExpression()
 {
+    products.push(ApraamTokType::numberLiteral);
     products.push(ApraamTokType::regB);
     products.push(ApraamTokType::regA);
     products.push(ApraamTokType::blockSymbol);
@@ -123,18 +124,11 @@ void ApraamTranslatorParser::generateProducts()
         break;
 
         // Expression
+    case ApraamTokType::regB:
     case ApraamTokType::regA:
         generateProductsForAnyOperand(); // a /= b ??
         products.push(ApraamTokType::blockSymbol);
         products.push(ApraamTokType::multiplicativeOperator);
-        products.push(ApraamTokType::additiveOperator);
-        products.push(ApraamTokType::assigmentOperator);
-        products.push(ApraamTokType::to);
-        products.push(ApraamTokType::from);
-        break;
-    case ApraamTokType::regB:
-        generateProductsForAnyOperand();
-        products.push(ApraamTokType::blockSymbol);
         products.push(ApraamTokType::additiveOperator);
         products.push(ApraamTokType::assigmentOperator);
         products.push(ApraamTokType::to);
@@ -173,6 +167,9 @@ void ApraamTranslatorParser::generateProducts()
         products.push(ApraamTokType::then);
         products.push(ApraamTokType::blockSymbol);
         generateProductsForLogicExpression();
+        break;
+
+    case ApraamTokType::eof:
         break;
 
     default:
