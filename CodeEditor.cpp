@@ -337,17 +337,22 @@ void CodeEditor::updateFoldMarkers() {
     QTextBlock block = document()->begin();
     while (block.isValid()) {
         QString text = block.text().trimmed();
-        if (text.endsWith("{") && block.next().isValid() && block.next() != findClosingBraceBlock(block)) {
-            FoldMarker *marker = new FoldMarker(this);
-            marker->setBlockIndex(block.blockNumber());
-            marker->setFoldState(foldedBlocks.value(block.blockNumber(), false));
-            connect(marker, &FoldMarker::toggled, this, &CodeEditor::toggleFold);
 
-            QRect blockRect = blockBoundingGeometry(block).translated(contentOffset()).toRect();
-            int tabWidth = fontMetrics().horizontalAdvance(' ') * 4;
-            marker->move(blockRect.left() + tabWidth, blockRect.top());
-            marker->show();
-            foldMarkers.append(marker);
+        // Условие: строка заканчивается на {, и существует соответствующая }
+        if (text.endsWith("{")) {
+            QTextBlock closingBlock = findClosingBraceBlock(block);
+            if (closingBlock.isValid()) { // Убедимся, что закрывающая скобка найдена
+                FoldMarker *marker = new FoldMarker(this);
+                marker->setBlockIndex(block.blockNumber());
+                marker->setFoldState(foldedBlocks.value(block.blockNumber(), true));
+                connect(marker, &FoldMarker::toggled, this, &CodeEditor::toggleFold);
+
+                QRect blockRect = blockBoundingGeometry(block).translated(contentOffset()).toRect();
+                int tabWidth = fontMetrics().horizontalAdvance(' ') * 16;
+                marker->move(blockRect.left() + tabWidth, blockRect.top());
+                marker->show();
+                foldMarkers.append(marker);
+            }
         }
         block = block.next();
     }
@@ -356,17 +361,15 @@ void CodeEditor::updateFoldMarkers() {
 void CodeEditor::toggleFold(int blockIndex) {
     QTextBlock startBlock = document()->findBlockByNumber(blockIndex);
     if (!startBlock.isValid()) return;
-
     QTextBlock closingBlock = findClosingBraceBlock(startBlock);
     if (!closingBlock.isValid()) return;
-
-    bool isCurrentlyFolded = foldedBlocks.value(blockIndex, false);
+    bool isCurrentlyFolded = foldedBlocks.value(blockIndex, true);
     foldedBlocks[blockIndex] = !isCurrentlyFolded;
 
     QTextBlock currentBlock = startBlock.next();
 
     // Обновляем видимость строк
-    while (currentBlock.isValid() && currentBlock != closingBlock.next()) {
+    while (currentBlock.isValid() && currentBlock != closingBlock) {
         currentBlock.setVisible(!isCurrentlyFolded);
         currentBlock = currentBlock.next();
     }
@@ -378,6 +381,8 @@ void CodeEditor::toggleFold(int blockIndex) {
             break;
         }
     }
+    // Обновление представления строк
+    emit updateRequest(QRect(0, 0, viewport()->width(), viewport()->height()), 0);
 
     // Обновляем представление редактора
     viewport()->update();

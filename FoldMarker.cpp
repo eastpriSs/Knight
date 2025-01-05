@@ -39,6 +39,6 @@ void FoldMarker::paintEvent(QPaintEvent *) {
 
     // Рисуем текст
     painter.setPen(Qt::white);
-    QString symbol = foldState_ ? "+" : "-";
+    QString symbol = foldState_ ? "-" : "+";
     painter.drawText(rect(), Qt::AlignCenter, symbol);
 }
