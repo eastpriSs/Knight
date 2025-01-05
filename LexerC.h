@@ -9,6 +9,7 @@ class LexerC final : public Lexer
 {
 private:
     QString lastLexem = {};
+    ShortTokType lastLexemType = {};
 
 private:
     void skipWhiteSpaces();

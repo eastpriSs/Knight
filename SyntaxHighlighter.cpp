@@ -20,6 +20,10 @@ SyntaxHiglighter::SyntaxHiglighter(QTextDocument *parent)
     errorHighlightingRule.setFontUnderline(true);
     errorHighlightingRule.setUnderlineStyle(QTextCharFormat::WaveUnderline);
 
+    // Found string
+    foundStringHighlightingRule.setBackground(Qt::yellow);
+    foundStringHighlightingRule.setUnderlineStyle(QTextCharFormat::SingleUnderline);
+
     // Colors
     turnOnLightTheme();
     stringLiterHighlightingRule.setForeground(Qt::darkGreen);
@@ -50,6 +54,14 @@ void SyntaxHiglighter::switchAnalyzer(Analyzer* a)
     analyzer = a;
 }
 
+void SyntaxHiglighter::highlightString(const int & s, const int & l)
+{
+    QTextCursor cursor = QTextCursor(document());
+    cursor.setPosition(s);
+    cursor.setPosition(s + l, QTextCursor::KeepAnchor);
+    cursor.mergeCharFormat(foundStringHighlightingRule);
+}
+
 void SyntaxHiglighter::highlightBlock(const QString& text)
 {
     Token token;
@@ -59,30 +71,30 @@ void SyntaxHiglighter::highlightBlock(const QString& text)
         switch (token.stype)
         {
         case ShortTokType::id:
-            setFormat(token.posStartOfWord, token.posEndOfWord, idHighlightingRule);
+            setFormat(token.posStartOfWord, token.lengthOfWord, idHighlightingRule);
             break;
         case ShortTokType::num:
-            setFormat(token.posStartOfWord, token.posEndOfWord, numHighlightingRule);
+            setFormat(token.posStartOfWord, token.lengthOfWord, numHighlightingRule);
             break;
         case ShortTokType::keyword:
-            setFormat(token.posStartOfWord, token.posEndOfWord, keywordHighlightingRule);
+            setFormat(token.posStartOfWord, token.lengthOfWord, keywordHighlightingRule);
             break;
         case ShortTokType::macro:
-            setFormat(token.posStartOfWord, token.posEndOfWord, macroHighlightingRule);
+            setFormat(token.posStartOfWord, token.lengthOfWord, macroHighlightingRule);
             break;
         case ShortTokType::stringLiter:
-            setFormat(token.posStartOfWord, token.posEndOfWord, stringLiterHighlightingRule);
+            setFormat(token.posStartOfWord, token.lengthOfWord, stringLiterHighlightingRule);
             break;
         case ShortTokType::_operator:
-            setFormat(token.posStartOfWord, token.posEndOfWord, operatorHighlightingRule);
+            setFormat(token.posStartOfWord, token.lengthOfWord, operatorHighlightingRule);
             break;
         case ShortTokType::unknown:
-            setFormat(token.posStartOfWord, token.posEndOfWord, QTextCharFormat());
+            setFormat(token.posStartOfWord, token.lengthOfWord, QTextCharFormat());
             break;
 
         default : break;
         }
         if (token.syntaxError)
-            setFormat(token.posStartOfWord, token.posEndOfWord, errorHighlightingRule);
+            setFormat(token.posStartOfWord, token.lengthOfWord, errorHighlightingRule);
     }
 }

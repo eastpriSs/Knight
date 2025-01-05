@@ -15,6 +15,7 @@ SOURCES += \
     ApraamTranslatorLexer.cpp \
     ApraamTranslatorParser.cpp \
     CodeEditor.cpp \
+    CommandInfoList.cpp \
     ConsoleOutput.cpp \
     FoldMarker.cpp \
     LanguageList.cpp \
@@ -25,6 +26,7 @@ SOURCES += \
     MainWindow.cpp \
     MenuBarLogger.cpp \
     Parser.cpp \
+    ReplaceDialog.cpp \
     SettingMenuSendAction.cpp \
     SyntaxHighlighter.cpp \
     Token.cpp \
@@ -37,6 +39,7 @@ HEADERS += \
     ApraamTranslatorLexer.h \
     ApraamTranslatorParser.h \
     CodeEditor.h \
+    CommandInfoList.h \
     ConsoleOutput.h \
     FoldMarker.h \
     LanguageList.h \
@@ -47,6 +50,7 @@ HEADERS += \
     MainWindow.h \
     MenuBarLogger.h \
     Parser.h \
+    ReplaceDialog.h \
     SettingMenuSendAction.h \
     SyntaxHighlighter.h \
     Token.h
@@ -54,6 +58,7 @@ HEADERS += \
 FORMS += \
     ConsoleOutput.ui \
     MainWindow.ui \
+    ReplaceDialog.ui \
     SettingMenuSendAction.ui
 
 # Default rules for deployment.

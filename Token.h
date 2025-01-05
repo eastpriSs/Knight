@@ -33,7 +33,7 @@ public:
     ShortTokType stype = ShortTokType::eof;
     TokenType ttype = std::monostate{};
     int posStartOfWord = 0;
-    int posEndOfWord = 0;
+    int lengthOfWord = 0;
     int linePosition = 0;
     bool syntaxError = false;
 };
