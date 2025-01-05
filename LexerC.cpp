@@ -88,8 +88,7 @@ Token LexerC::scan()
     Token scanningToken;
 
 
-    if (!it->isLetter()
-        && !it->isNull()
+    if (it->isSpace()
         && (lastLexemType == ShortTokType::id)
         && (lastLexem.length() > 4))
         tryAddLastLexemToCompleter();

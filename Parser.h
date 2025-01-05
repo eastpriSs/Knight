@@ -17,6 +17,7 @@ public:
     Parser(Lexer*, Logger*);
     virtual ~Parser() = default;
     virtual Token parse();
+    virtual void prepare();
 };
 
 #endif // PARSER_H

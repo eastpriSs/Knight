@@ -15,3 +15,8 @@ Token Parser::parse()
 {
     return lex->scan();
 }
+
+void Parser::prepare()
+{
+
+}

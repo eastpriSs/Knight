@@ -26,3 +26,9 @@ Token AnalyzerApraam::getAnalysedToken()
 {
     return pars->parse();
 }
+
+void AnalyzerApraam::setScanningBlock(const QString &  block)
+{
+    lex->setScanningBlock(block);
+    pars->prepare();
+}

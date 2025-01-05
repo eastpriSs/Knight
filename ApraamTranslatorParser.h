@@ -10,6 +10,7 @@ class ApraamTranslatorParser final : public Parser
 private:
     QStack<ApraamTokType> products;
     QList<ApraamTokType> expected;
+    bool isSyntaxErrorExist;
 
     void generateProductsForLogicExpression();
     void generateProductsForAnyOperand();
@@ -22,6 +23,7 @@ public:
     ApraamTranslatorParser(Lexer*);
     ApraamTranslatorParser(Lexer*, Logger*);
     Token parse() override;
+    void prepare() override;
 };
 
 #endif // APRAAMTRANSLATORPARSER_H

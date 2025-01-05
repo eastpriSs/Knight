@@ -3,46 +3,46 @@
 
 
 inline const QHash<ApraamTokType, QString> tokenStrEquivalent =
-{
-    {ApraamTokType::PUSH, "PUSH"},
-    {ApraamTokType::POP, "POP"},
-    {ApraamTokType::SWAP, "SWAP"},
-    {ApraamTokType::IN, "IN"},
-    {ApraamTokType::OUT, "OUT"},
-    {ApraamTokType::IF, "IF)"},
-    {ApraamTokType::numberLiteral, "Числовой литерал"},
-    {ApraamTokType::id, "Идентификатор"},
-    {ApraamTokType::unknown, "Неизвестный"},
-    {ApraamTokType::assgm, "Присваивание"},
-    {ApraamTokType::plus, "Плюс"},
-    {ApraamTokType::mul, "Умножение"},
-    {ApraamTokType::sub, "Минус"},
-    {ApraamTokType::div, "Деление"},
-    {ApraamTokType::VAR, "Переменная"},
-    {ApraamTokType::shift, "Сдвиг"},
-    {ApraamTokType::operand, "Операнд"},
-    {ApraamTokType::label, "Метка"},
-    {ApraamTokType::operLess, "Оператор меньше"},
-    {ApraamTokType::operBigger, "Оператор больше"},
-    {ApraamTokType::operEqLess, "Оператор меньше или равно"},
-    {ApraamTokType::operEqBig, "Оператор больше или равно"},
-    {ApraamTokType::operEq, "Оператор равно"},
-    {ApraamTokType::operNotEqual, "Оператор не равно"},
-    {ApraamTokType::stop, "Стоп"},
-    {ApraamTokType::jmpConstruction, "Конструкция перехода"},
-    {ApraamTokType::call, "Вызов"},
-    {ApraamTokType::ret, "Возврат"},
-    {ApraamTokType::then, "Тогда"},
-    {ApraamTokType::startSymbol, "Начальный символ"},
-    {ApraamTokType::additiveOperator, "Аддитивный оператор"},
-    {ApraamTokType::logicOperator, "Логический оператор"},
-    {ApraamTokType::multiplicativeOperator, "Мультипликативный оператор"},
-    {ApraamTokType::assigmentOperator, "Оператор присваивания"},
-    {ApraamTokType::regA, "Регистр A"},
-    {ApraamTokType::regB, "Регистр B"},
-    {ApraamTokType::to, "to"},
-    {ApraamTokType::from, "from"},
-    {ApraamTokType::eof, "Конец файла"}
+    {
+        {ApraamTokType::PUSH, "PUSH"},
+        {ApraamTokType::POP, "POP"},
+        {ApraamTokType::SWAP, "SWAP"},
+        {ApraamTokType::IN, "IN"},
+        {ApraamTokType::OUT, "OUT"},
+        {ApraamTokType::IF, "IF)"},
+        {ApraamTokType::numberLiteral, "Числовой литерал"},
+        {ApraamTokType::id, "Идентификатор"},
+        {ApraamTokType::unknown, "Неизвестный"},
+        {ApraamTokType::assgm, "Присваивание"},
+        {ApraamTokType::plus, "Плюс"},
+        {ApraamTokType::mul, "Умножение"},
+        {ApraamTokType::sub, "Минус"},
+        {ApraamTokType::div, "Деление"},
+        {ApraamTokType::VAR, "Переменная"},
+        {ApraamTokType::shift, "Сдвиг"},
+        {ApraamTokType::operand, "Операнд"},
+        {ApraamTokType::label, "Метка"},
+        {ApraamTokType::operLess, "Оператор меньше"},
+        {ApraamTokType::operBigger, "Оператор больше"},
+        {ApraamTokType::operEqLess, "Оператор меньше или равно"},
+        {ApraamTokType::operEqBig, "Оператор больше или равно"},
+        {ApraamTokType::operEq, "Оператор равно"},
+        {ApraamTokType::operNotEqual, "Оператор не равно"},
+        {ApraamTokType::stop, "Стоп"},
+        {ApraamTokType::jmpConstruction, "Конструкция перехода"},
+        {ApraamTokType::call, "Вызов"},
+        {ApraamTokType::ret, "Возврат"},
+        {ApraamTokType::then, "Тогда"},
+        {ApraamTokType::startSymbol, "Начальный символ"},
+        {ApraamTokType::additiveOperator, "Аддитивный оператор"},
+        {ApraamTokType::logicOperator, "Логический оператор"},
+        {ApraamTokType::multiplicativeOperator, "Мультипликативный оператор"},
+        {ApraamTokType::assigmentOperator, "Оператор присваивания"},
+        {ApraamTokType::regA, "Регистр A"},
+        {ApraamTokType::regB, "Регистр B"},
+        {ApraamTokType::to, "to"},
+        {ApraamTokType::from, "from"},
+        {ApraamTokType::eof, "Конец файла"}
 };
 
 
@@ -60,7 +60,7 @@ ApraamTranslatorParser::ApraamTranslatorParser(Lexer* l, Logger* lg)
 
 QString makeInfoMessage(const QList<ApraamTokType>& expctd)
 {
-    QString message = "Ожидается один из следующих символов:\n";
+    QString message = "Ожидался один из следующих символов:\n";
     foreach (const ApraamTokType& i, expctd) {
         message += tokenStrEquivalent[i];
         message += ",\n";
@@ -106,9 +106,9 @@ void ApraamTranslatorParser::generateProductsForLogicExpression()
 
 void ApraamTranslatorParser::generateProducts()
 {
-    #ifdef TESTMODE
+#ifdef TESTMODE
     qDebug() << "Generating for " << (int)std::get<ApraamTokType>(currTkn.ttype);
-    #endif
+#endif
     switch (std::get<ApraamTokType>(currTkn.ttype)) {
 
     // Definitions
@@ -177,6 +177,7 @@ void ApraamTranslatorParser::generateProducts()
 
     default:
         currTkn.syntaxError = true;
+        logger->write("Этот токен просто пустышка.");
         break;
     }
 }
@@ -205,6 +206,12 @@ void ApraamTranslatorParser::checkTop()
 
     if (products.top() == ApraamTokType::blockSymbol)
         products.pop();
+}
+
+void ApraamTranslatorParser::prepare()
+{
+    products.clear();
+    products.push(ApraamTokType::startSymbol);
 }
 
 Token ApraamTranslatorParser::parse()

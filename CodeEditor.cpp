@@ -191,7 +191,6 @@ void CodeEditor::updateLineNumberArea(const QRect &rect, int dy)
 void CodeEditor::changeModeToCommandInput()
 {
     mode = codeEditorMode::commandMode;
-    setFixedHeight(height() - 100);
     commandInfoList.show();
     setReadOnly(true);
 }
@@ -199,7 +198,6 @@ void CodeEditor::changeModeToCommandInput()
 void CodeEditor::changeModeToFullEdit()
 {
     mode = codeEditorMode::fullEditMode;
-    setFixedHeight(height() + 100);
     commandInfoList.hide();
     setReadOnly(false);
 }

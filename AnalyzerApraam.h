@@ -9,6 +9,7 @@ public:
     AnalyzerApraam();
     AnalyzerApraam(Logger*);
     Token getAnalysedToken() override;
+    void setScanningBlock(const QString&) override;
     void holdCompleterModel(QAbstractItemModel*);
 };
 
