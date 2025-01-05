@@ -58,15 +58,13 @@ ApraamTranslatorParser::ApraamTranslatorParser(Lexer* l, Logger* lg)
     products.push(ApraamTokType::startSymbol);
 }
 
-QString makeInfoMessage(const QList<ApraamTokType>& expctd, const ApraamTokType& found)
+QString makeInfoMessage(const QList<ApraamTokType>& expctd)
 {
-    QString message = "Ожидался один из следующих символов:\n";
+    QString message = "Ожидается один из следующих символов:\n";
     foreach (const ApraamTokType& i, expctd) {
         message += tokenStrEquivalent[i];
         message += ",\n";
     }
-    message += "но найден ";
-    message += tokenStrEquivalent[found];
     return message;
 }
 
@@ -178,7 +176,7 @@ void ApraamTranslatorParser::generateProducts()
         break;
 
     default:
-        //currTkn.syntaxError = true;
+        currTkn.syntaxError = true;
         break;
     }
 }
@@ -186,15 +184,18 @@ void ApraamTranslatorParser::generateProducts()
 void ApraamTranslatorParser::checkTop()
 {
     const ApraamTokType& currTknType = std::get<ApraamTokType>(currTkn.ttype);
+    if (currTknType == ApraamTokType::eof)
+        return;
+
     while (currTknType != products.top())
     {
-        qDebug() << '(' << (int)currTknType << ',' << (int)products.top() << ')';
         if (products.top() == ApraamTokType::startSymbol || products.top() == ApraamTokType::blockSymbol)
             break;
         expected += products.pop();
     }
 
     if (currTknType != products.top()) {
+        logger->write(makeInfoMessage(expected));
         currTkn.syntaxError = true;
     } else {
         while (products.top() != ApraamTokType::startSymbol && products.top() != ApraamTokType::blockSymbol)
@@ -204,10 +205,6 @@ void ApraamTranslatorParser::checkTop()
     if (products.top() == ApraamTokType::blockSymbol)
         products.pop();
 
-
-    #ifdef TESTMODE
-    qDebug() << "SyntaxError:" << currTkn.syntaxError << "type:" << (int)currTknType;
-    #endif
 }
 
 Token ApraamTranslatorParser::parse()
@@ -219,6 +216,5 @@ Token ApraamTranslatorParser::parse()
     else
         checkTop();
 
-    logger->write(makeInfoMessage(expected, std::get<ApraamTokType>(currTkn.ttype)));
     return currTkn;
 }
