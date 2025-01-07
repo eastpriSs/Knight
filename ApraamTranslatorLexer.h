@@ -10,6 +10,7 @@ class ApraamTranslatorLexer final : public Lexer
 private:
     typedef ApraamTokType TokenType;
     const static QHash<QString, TokenType> table;
+    QString lastLexem;
 
     void skipWhiteSpaces();
     [[nodiscard]]
@@ -20,6 +21,7 @@ private:
 public:
     ApraamTranslatorLexer();
     Token scan() override;
+    QString getLastLexem() const override ;
 };
 
 

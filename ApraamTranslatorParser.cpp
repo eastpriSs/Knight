@@ -9,7 +9,7 @@ inline const QHash<ApraamTokType, QString> tokenStrEquivalent =
         {ApraamTokType::SWAP, "SWAP"},
         {ApraamTokType::IN, "IN"},
         {ApraamTokType::OUT, "OUT"},
-        {ApraamTokType::IF, "IF)"},
+        {ApraamTokType::IF, "IF"},
         {ApraamTokType::numberLiteral, "Числовой литерал"},
         {ApraamTokType::id, "Идентификатор"},
         {ApraamTokType::unknown, "Неизвестный"},
@@ -58,13 +58,20 @@ ApraamTranslatorParser::ApraamTranslatorParser(Lexer* l, Logger* lg)
     products.push(ApraamTokType::startSymbol);
 }
 
-QString makeInfoMessage(const QList<ApraamTokType>& expctd)
+QString makeInfoMessage(const QList<ApraamTokType>& expctd,
+                        const ApraamTokType& found,
+                        const QString& foundLexem)
 {
     QString message = "Ожидался один из следующих символов:\n";
     foreach (const ApraamTokType& i, expctd) {
         message += tokenStrEquivalent[i];
         message += ",\n";
     }
+    message += "но найден ";
+    message += tokenStrEquivalent[found];
+    message += "(\"";
+    message += foundLexem;
+    message += "\")";
     return message;
 }
 
@@ -107,10 +114,12 @@ void ApraamTranslatorParser::generateProductsForLogicExpression()
 
 void ApraamTranslatorParser::generateProducts()
 {
-#ifdef TESTMODE
-    qDebug() << "Generating for " << (int)std::get<ApraamTokType>(currTkn.ttype);
-#endif
-    switch (std::get<ApraamTokType>(currTkn.ttype)) {
+    const ApraamTokType& currTknType = std::get<ApraamTokType>(currTkn.ttype);
+
+    if (currTknType != ApraamTokType::eof)
+        logger->clear();
+
+    switch (currTknType) {
 
     // Definitions
     case ApraamTokType::VAR:
@@ -174,7 +183,7 @@ void ApraamTranslatorParser::generateProducts()
 
     default:
         currTkn.syntaxError = true;
-        logger->write("Этот токен просто пустышка.");
+        logger->write("Этот токен просто дешевка.");
         break;
     }
 }
@@ -194,7 +203,7 @@ void ApraamTranslatorParser::checkTop()
     }
 
     if (currTknType != products.top()) {
-        logger->write(makeInfoMessage(expected));
+        logger->write(makeInfoMessage(expected, currTknType, lex->getLastLexem()));
         currTkn.syntaxError = true;
     } else {
         while (products.top() != ApraamTokType::startSymbol && products.top() != ApraamTokType::blockSymbol)

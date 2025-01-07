@@ -23,6 +23,7 @@ public:
     virtual void addKeyword(QString&&);
     virtual Token scan();
     virtual ~Lexer() = default;
+    virtual QString getLastLexem() const;
 };
 
 #endif // LEXER_H

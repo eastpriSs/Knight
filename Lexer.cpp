@@ -34,3 +34,8 @@ Token Lexer::scan()
 {
     return Token();
 }
+
+QString Lexer::getLastLexem() const
+{
+    return QString();
+}

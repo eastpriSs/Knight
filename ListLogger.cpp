@@ -15,6 +15,15 @@ ListLogger::ListLogger(QWidget* parent, int ax,int ay,int x,int y)
 
 void ListLogger::write(const QString& m)
 {
-    list.clear();
     list.addItem(m);
+}
+
+bool ListLogger::isShowingMessage()
+{
+    return list.count() == 0;
+}
+
+void ListLogger::clear()
+{
+    list.clear();
 }

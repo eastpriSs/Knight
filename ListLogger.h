@@ -13,6 +13,8 @@ public:
     ListLogger(QWidget*, int,int,int,int);
     ListLogger() = default;
     void write(const QString&) override;
+    bool isShowingMessage() override;
+    void clear() override;
     inline void hide() { list.hide(); }
     inline void show() { list.show(); }
 };

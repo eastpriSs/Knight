@@ -43,6 +43,11 @@ inline QString makeString(const QString::const_iterator& b,
     return res;
 }
 
+QString ApraamTranslatorLexer::getLastLexem() const
+{
+    return lastLexem;
+}
+
 void ApraamTranslatorLexer::skipWhiteSpaces()
 {
     while(it->isSpace()) ++it;
@@ -203,7 +208,7 @@ Token ApraamTranslatorLexer::scan()
 
     scanningToken.posStartOfWord = it - begin;
     scanningToken.lengthOfWord   = forward - begin;
-
+    lastLexem = makeString(it, forward);
     #ifdef TESTMODE
     qDebug() << "ApraamTranslatorLexer::scan() messeage:";
     qDebug() << makeString(it, forward) << ", type=" << static_cast<int>(std::get<ApraamTokType>(scanningToken.ttype));

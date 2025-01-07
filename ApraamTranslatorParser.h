@@ -10,7 +10,6 @@ class ApraamTranslatorParser final : public Parser
 private:
     QStack<ApraamTokType> products;
     QList<ApraamTokType> expected;
-    bool isSyntaxErrorExist;
 
     void generateProductsForLogicExpression();
     void generateProductsForAnyOperand();
