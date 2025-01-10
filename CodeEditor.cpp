@@ -311,6 +311,17 @@ void CodeEditor::keyPressEventInEditMode(QKeyEvent *event)
             changeModeToFullEdit();
         else
             changeModeToCommandInput();
+    } else {
+        switch (event->key()) {
+        case Qt::Key_Tab:
+            {
+                QTextCursor cursor = textCursor();
+                for (int i = 0; i < tabsSize; ++i)
+                    cursor.insertText(" ");
+                setTextCursor(cursor);
+                return;
+            }
+        }
     }
 
     if (event->key() == Qt::Key_Enter
@@ -497,8 +508,8 @@ QList<QPoint> TextAlgorithm::quickSearch(const QString & text, const QString & s
 {
     QList<QPoint> result;
     QMap<QChar, int> shiftTable;
-    qsizetype len = str.length();
-    qsizetype textLen = text.length();
+    int len = str.length();
+    int textLen = text.length();
 
     for (int i = len - 2; i >= 0; --i) {
         if (shiftTable.find(str[i]) == shiftTable.end())
@@ -513,23 +524,22 @@ QList<QPoint> TextAlgorithm::quickSearch(const QString & text, const QString & s
         k = i;
         j = len - 1;
 
-        while ((j >= 0) && (text[k] == str[j])) {
+        while ((j >= 0) && (k >= 0) && (text[k] == str[j])) {
             --k;
             --j;
         }
         if (j < 0) {
             result += QPoint(k + 1, k + len);
-            i += len - 1;
+            i += len;
             continue;
         }
-
-        if (shiftTable.find(str[j]) == shiftTable.end())
-            i += len - 1;
+        if (k < 0) break;
+        if (shiftTable.find(text[k]) == shiftTable.end())
+            i += len;
         else
-            i += shiftTable[str[j]] - 1;
+            i += shiftTable[text[k]];
 
     } while (i < textLen);
-
     return result;
 }
 
