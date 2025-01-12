@@ -107,7 +107,7 @@ void MainWindow::on_sendAction_triggered()
         return;
     }
     QString compilerName = readLineFormFile(compilerSettingFile);
-    QString command = compilerName + ' ' + '"' + codeEditor.nameEditingFile + '"';
+    QString command = compilerName + ' ' + codeEditor.nameEditingFile;
     QProcess cmdProc;
 
     ui->statusbar->showMessage("Sending command: " + command);
